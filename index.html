@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dein Name | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { darkMode: 'class' }
+        function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; }
+        .glass { backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
+        .hero-gradient { background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.8) 100%); }
+        .apple-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .apple-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-[#f5f5f7] text-[#1d1d1f] dark:bg-black dark:text-white transition-colors duration-500 font-light">
+
+    <nav class="fixed w-full z-50 glass bg-white/70 dark:bg-[#1c1c1e]/70 border-b border-gray-200 dark:border-white/10">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                Dein<span class="text-blue-600">Name</span>
+            </a>
+
+            <div class="flex items-center space-x-6 text-sm font-medium">
+                <a href="#ueber-mich" class="hover:text-blue-600 transition">Über mich</a>
+                <a href="#skills" class="hover:text-blue-600 transition">Skills</a>
+                <a href="#projekte" class="hover:text-blue-600 transition">Projekte</a>
+                <a href="#kontakt" class="hover:text-blue-600 transition">Kontakt</a>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover">🌓</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative h-screen flex items-center justify-center text-center bg-[#000]">
+        <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="hero-gradient absolute inset-0"></div>
+        <div class="relative max-w-4xl px-6">
+            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter text-white mb-6">Hallo, ich bin Dein Name.</h1>
+            <p class="text-xl md:text-2xl text-gray-300 font-light">Kreativer Kopf, Entwickler & Problemlöser.</p>
+        </div>
+    </section>
+
+    <section id="ueber-mich" class="py-24 max-w-6xl mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-4xl font-bold mb-6 tracking-tight">Ein wenig über mich.</h2>
+                <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
+                    Hier kannst du einen Text über dich schreiben. Was machst du gerne? Was motiviert dich? 
+                    Dieses Layout ist darauf ausgelegt, deine Persönlichkeit modern und professionell zu präsentieren.
+                </p>
+                <div class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-bold apple-hover shadow-lg cursor-pointer">
+                    Mein Lebenslauf
+                </div>
+            </div>
+            <div class="bg-white dark:bg-[#1c1c1e] p-2 rounded-[3rem] shadow-2xl border border-gray-100 dark:border-white/5">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80" class="rounded-[2.5rem] w-full h-80 object-cover" alt="Portrait">
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-24 bg-white dark:bg-[#0a0a0a]">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-12 text-center">Fähigkeiten</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
+                    <div class="text-3xl mb-4">💻</div>
+                    <h3 class="font-bold">Development</h3>
+                    <p class="text-xs text-gray-500 mt-2">HTML, CSS, JS, Python</p>
+                </div>
+                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
+                    <div class="text-3xl mb-4">🎨</div>
+                    <h3 class="font-bold">Design</h3>
+                    <p class="text-xs text-gray-500 mt-2">UI/UX, Figma, Adobe</p>
+                </div>
+                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
+                    <div class="text-3xl mb-4">📸</div>
+                    <h3 class="font-bold">Photography</h3>
+                    <p class="text-xs text-gray-500 mt-2">Editing & Shooting</p>
+                </div>
+                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
+                    <div class="text-3xl mb-4">🚀</div>
+                    <h3 class="font-bold">Marketing</h3>
+                    <p class="text-xs text-gray-500 mt-2">Social Media, SEO</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projekte" class="py-24 max-w-6xl mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-12">Projekte</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group bg-gray-200">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80">
+                <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end text-white">
+                    <h4 class="font-bold text-2xl">Projekt Eins</h4>
+                    <p class="text-sm opacity-80 mt-2">Eine kurze Beschreibung deines Projekts und was du dort erreicht hast.</p>
+                </div>
+            </div>
+            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group bg-gray-200">
+                <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?auto=format&fit=crop&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80">
+                <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end text-white">
+                    <h4 class="font-bold text-2xl">Projekt Zwei</h4>
+                    <p class="text-sm opacity-80 mt-2">Webdesign & Branding für einen fiktiven Kunden.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kontakt" class="py-24 bg-white dark:bg-[#0a0a0a]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-8">Lass uns quatschen.</h2>
+            <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-12 rounded-[3rem] border border-gray-100 dark:border-white/5">
+                <p class="text-xl mb-8">Hast du eine Idee oder ein Projekt im Kopf?</p>
+                <a href="mailto:deine-mail@beispiel.de" class="text-2xl md:text-4xl font-bold text-blue-600 hover:underline break-all">
+                    hallo@deine-website.de
+                </a>
+                <div class="flex justify-center space-x-6 mt-12">
+                    <a href="#" class="text-gray-400 hover:text-blue-600 transition">LinkedIn</a>
+                    <a href="#" class="text-gray-400 hover:text-pink-600 transition">Instagram</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-gray-400 text-[10px] uppercase tracking-widest">
+        © 2026 Dein Name | Gebaut mit Leidenschaft & Code.
+    </footer>
+
+</body>
+</html>
 
