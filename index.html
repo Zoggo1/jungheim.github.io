@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = { darkMode: 'class' }
+        // Set dark mode as default
+        if (typeof window !== 'undefined') {
+            document.documentElement.classList.add('dark');
+        }
         function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
     </script>
     <style>
@@ -16,122 +20,345 @@
         .glass { backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
         .hero-gradient { background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.8) 100%); }
         .apple-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .apple-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .apple-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+        /* Animationen */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.7);
+            }
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hover-glow {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-glow:hover {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Smooth transitions */
+        section {
+            transition: opacity 0.6s ease-in;
+        }
+        
+        /* Letter spacing animation */
+        .hover-letter-spacing {
+            transition: letter-spacing 0.3s ease;
+        }
+        
+        .hover-letter-spacing:hover {
+            letter-spacing: 2px;
+        }
+        
+        /* Parallax effect for hero */
+        .parallax {
+            position: relative;
+        }
     </style>
 </head>
-<body class="bg-[#f5f5f7] text-[#1d1d1f] dark:bg-black dark:text-white transition-colors duration-500 font-light">
+<body class="bg-white text-[#1d1d1f] dark:bg-black dark:text-white transition-colors duration-500 font-light">
 
-    <nav class="fixed w-full z-50 glass bg-white/70 dark:bg-[#1c1c1e]/70 border-b border-gray-200 dark:border-white/10">
+    <nav class="fixed w-full z-50 glass bg-white/80 dark:bg-black/80 border-b border-gray-200 dark:border-white/10">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
-                jungheim.site<span>
+            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition hover-letter-spacing">
+                jungheim.site
             </a>
 
             <div class="flex items-center space-x-6 text-sm font-medium">
-                <a href="#ueber-mich" class="hover:text-blue-600 transition">Über mich</a>
-                <a href="#skills" class="hover:text-blue-600 transition">Skills</a>
-                <a href="#projekte" class="hover:text-blue-600 transition">Projekte</a>
-                <a href="#kontakt" class="hover:text-blue-600 transition">Kontakt</a>
-                <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover">🌓</button>
+                <a href="#ueber-mich" class="text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition">Über mich</a>
+                <a href="#skills" class="text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition">Skills</a>
+                <a href="#projekte" class="text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition">Projekte</a>
+                <a href="#kontakt" class="text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition">Kontakt</a>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover text-black dark:text-white transition">🌓</button>
             </div>
         </div>
     </nav>
 
-    <section class="relative h-screen flex items-center justify-center text-center bg-[#000]">
-        <img src="..." class="absolute inset-0 w-full h-full object-cover opacity-40">
-        <div class="hero-gradient absolute inset-0"></div>
-        <div class="relative max-w-4xl px-6">
-            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter text-white mb-6">Hallo, ich bin Jendrik.</h1>
-            <p class="text-xl md:text-2xl text-gray-300 font-light">Schüler</p>
+    <section class="relative h-screen flex items-center justify-center text-center bg-white dark:bg-gradient-to-b dark:from-[#0a0a0a] dark:via-[#1a1a2e] dark:to-black">
+        <div class="absolute inset-0 opacity-30 dark:opacity-20">
+            <div class="hidden dark:block absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
+            <div class="hidden dark:block absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        </div>
+        <div class="hidden dark:block hero-gradient absolute inset-0"></div>
+        <div class="relative max-w-4xl px-6 animate-fade-in-up">
+            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter text-black dark:text-white mb-6 hover-letter-spacing">Hallo, ich bin <span class="gradient-text">Jendrik</span>.</h1>
+            <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 font-light mb-8">Schüler | Developer | Drohnen Pilot</p>
+            <div class="flex gap-4 justify-center flex-wrap">
+                <a href="#ueber-mich" class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-bold apple-hover shadow-lg hover:shadow-xl">Mehr über mich</a>
+                <a href="#kontakt" class="inline-block border-2 border-blue-600 dark:border-white text-blue-600 dark:text-white px-8 py-3 rounded-full font-bold apple-hover hover:bg-blue-600/10 dark:hover:bg-white/10">Kontakt</a>
+            </div>
         </div>
     </section>
 
-    <section id="ueber-mich" class="py-24 max-w-6xl mx-auto px-6">
+    <section id="ueber-mich" class="py-24 max-w-6xl mx-auto px-6 bg-white dark:bg-black">
         <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-                <h2 class="text-4xl font-bold mb-6 tracking-tight">Ein wenig über mich.</h2>
-                <p class="text-lg text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-                    Hier kannst du einen Text über dich schreiben. Was machst du gerne? Was motiviert dich? 
-                    Dieses Layout ist darauf ausgelegt, deine Persönlichkeit modern und professionell zu präsentieren.
+            <div class="animate-fade-in-up">
+                <h2 class="text-4xl font-bold mb-6 tracking-tight text-black dark:text-white">
+                    Ein wenig <span class="gradient-text">über mich</span>.
+                </h2>
+                <p class="text-lg text-gray-700 dark:text-gray-400 leading-relaxed mb-6">
+                    Ich bin Jendrik, ein passionierter Schüler mit Interesse an Webentwicklung, Technologie und Drohnen. 
+                    Ich liebe es, neue Dinge zu lernen und kreative Projekte umzusetzen. Auf dieser Website kannst du mehr über meine 
+                    Fähigkeiten und Projekte erfahren.
                 </p>
-                <div class="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-bold apple-hover shadow-lg cursor-pointer">
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">🎯</div>
+                        <div>
+                            <p class="font-bold text-black dark:text-white">Zielorientiert</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Ich arbeite fokussiert an meinen Projekten</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">🚀</div>
+                        <div>
+                            <p class="font-bold text-black dark:text-white">Innovation</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">Aktuelle Technologien sind meine Leidenschaft</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-full font-bold apple-hover shadow-lg cursor-pointer hover:shadow-xl">
                     Mein Lebenslauf
-                </div>
-            </div>
-            <div class="bg-white dark:bg-[#1c1c1e] p-2 rounded-[3rem] shadow-2xl border border-gray-100 dark:border-white/5">
-                <img src="..." class="rounded-[2.5rem] w-full h-80 object-cover" alt="Portrait">
-            </div>
-        </div>
-    </section>
-
-    <section id="skills" class="py-24 bg-white dark:bg-[#0a0a0a]">
-        <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-4xl font-bold mb-12 text-center">Skills</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
-                    <div class="text-3xl mb-4">💻</div>
-                    <h3 class="font-bold">Development</h3>
-                    <p class="text-xs text-gray-500 mt-2">HTML</p>
-                </div>
-                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
-                    <div class="text-3xl mb-4">📸</div>
-                    <h3 class="font-bold">Drohnen Pilot</h3>
-                    <p class="text-xs text-gray-500 mt-2">Hobby Drohnen Pilot</p>
-                </div>
-                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
-                    <div class="text-3xl mb-4">🚀</div>
-                    <h3 class="font-bold">Social Media</h3>
-                    <p class="text-xs text-gray-500 mt-2">Kenntnisse über Social Media</p>
-                </div>
-                <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-8 rounded-[2rem] apple-hover text-center border border-gray-100 dark:border-white/5">
-                    <div class="text-3xl mb-4">📸</div>
-                    <h3 class="font-bold">Drohnen Pilot</h3>
-                    <p class="text-xs text-gray-500 mt-2">Hobby Drohnen Pilot</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="projekte" class="py-24 max-w-6xl mx-auto px-6">
-        <h2 class="text-4xl font-bold mb-12">Projekte</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group bg-gray-200">
-                <img src="Veranstaltung_Forum.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80">
-                <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end text-white">
-                    <h4 class="font-bold text-2xl">Technische unterstützung Forum</h4>
-                    <p class="text-sm opacity-80 mt-2">Ich begleite Schulische Veranstaltungen als Techniker für Licht und Ton im Forum der Gesamtschule Langerfeld</p>
-                </div>
-            </div>
-            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group bg-gray-200">
-                <img src="Webseiten_entwicklung.png" class="w-full h-full object-cover transition duration-700 group-hover:scale-110 opacity-80">
-                <div class="absolute inset-0 bg-black/40 p-10 flex flex-col justify-end text-white">
-                    <h4 class="font-bold text-2xl">Websiten Entwicklung</h4>
-                    <p class="text-sm opacity-80 mt-2">Diese Website wurde von mir Entwickelt aktuell noch mit hilfe von Gemini aber vieles selbst.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="kontakt" class="py-24 bg-white dark:bg-[#0a0a0a]">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-8">Lass uns uns Austauchen.</h2>
-            <div class="bg-[#f5f5f7] dark:bg-[#1c1c1e] p-12 rounded-[3rem] border border-gray-100 dark:border-white/5">
-                <p class="text-xl mb-8">Kontakt</p>
-                <a href="mailto:...@jungheim.site" class="text-2xl md:text-4xl font-bold text-blue-600 hover:underline break-all">
-                    ...@jungheim.site
                 </a>
-                <div class="flex justify-center space-x-6 mt-12">
-                    <a href="https://de.linkedin.com/" class="text-gray-400 hover:text-blue-600 transition">LinkedIn</a>
-                    <a href="https://instagram.com/jendrik.jungheim" class="text-gray-400 hover:text-pink-600 transition">Instagram</a>
-                    <a href="https://github.com/Zoggo1" class="text-gray-400 hover:text-white transition">GitHub</a>
+            </div>
+            <div class="bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-2 rounded-[3rem] shadow-2xl border border-blue-600/30 dark:border-white/10 hover-glow animate-float">
+                <div class="rounded-[2.5rem] w-full h-80 bg-gradient-to-br from-gray-100 dark:from-gray-800 to-gray-200 dark:to-gray-900 flex items-center justify-center text-6xl">
+                    👨‍💻
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-12 text-center text-gray-400 text-[10px] uppercase tracking-widest">
-        © 2026 Jendrik Jungheim | <a href="impressum.html" style="color: inherit; text-decoration: none;">Impressum</a></p>
+    <section id="skills" class="py-24 bg-gray-50 dark:bg-gradient-to-b dark:from-black dark:to-[#0a0a0a]">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-4 text-center text-black dark:text-white">
+                Meine <span class="gradient-text">Skills</span>
+            </h2>
+            <p class="text-center text-gray-700 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+                Ein Überblick über meine Fähigkeiten und Interessen
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white dark:bg-gradient-to-br dark:from-[#1c1c1e] dark:to-[#0a0a0a] p-8 rounded-[2rem] apple-hover text-center border border-gray-200 dark:border-white/10 hover-glow shadow-md dark:shadow-lg">
+                    <div class="text-4xl mb-4">💻</div>
+                    <h3 class="font-bold mb-3 text-black dark:text-white">Webentwicklung</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">HTML, CSS, JavaScript, Tailwind</p>
+                </div>
+                <div class="bg-white dark:bg-gradient-to-br dark:from-[#1c1c1e] dark:to-[#0a0a0a] p-8 rounded-[2rem] apple-hover text-center border border-gray-200 dark:border-white/10 hover-glow shadow-md dark:shadow-lg">
+                    <div class="text-4xl mb-4">🚁</div>
+                    <h3 class="font-bold mb-3 text-black dark:text-white">Drohnen Pilot</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Hobby Drohnen Pilot, Fotografie</p>
+                </div>
+                <div class="bg-white dark:bg-gradient-to-br dark:from-[#1c1c1e] dark:to-[#0a0a0a] p-8 rounded-[2rem] apple-hover text-center border border-gray-200 dark:border-white/10 hover-glow shadow-md dark:shadow-lg">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="font-bold mb-3 text-black dark:text-white">Social Media</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Content Creation & Marketing</p>
+                </div>
+                <div class="bg-white dark:bg-gradient-to-br dark:from-[#1c1c1e] dark:to-[#0a0a0a] p-8 rounded-[2rem] apple-hover text-center border border-gray-200 dark:border-white/10 hover-glow shadow-md dark:shadow-lg">
+                    <div class="text-4xl mb-4">🎥</div>
+                    <h3 class="font-bold mb-3 text-black dark:text-white">Technik & Audio</h3>
+                    <p class="text-xs text-gray-600 dark:text-gray-400">Licht & Ton für Events</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projekte" class="py-24 max-w-6xl mx-auto px-6 bg-white dark:bg-black">
+        <h2 class="text-4xl font-bold mb-4 text-black dark:text-white">
+            Meine <span class="gradient-text">Projekte</span>
+        </h2>
+        <p class="text-gray-700 dark:text-gray-400 mb-12 max-w-2xl">
+            Hier sind einige der Projekte, an denen ich gearbeitet habe
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-xl group bg-gradient-to-br from-gray-300 dark:from-gray-800 to-gray-400 dark:to-gray-900 border border-gray-300 dark:border-white/10 hover-glow">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-600/40 group-hover:from-blue-600/60 group-hover:to-purple-600/60 transition duration-700"></div>
+                <div class="absolute inset-0 bg-black/30 p-10 flex flex-col justify-end text-white">
+                    <h4 class="font-bold text-2xl mb-2">🎤 Technische Unterstützung Forum</h4>
+                    <p class="text-sm opacity-90">Begleite ich schulische Veranstaltungen als Techniker für Licht und Ton im Forum der Gesamtschule Langerfeld</p>
+                    <div class="mt-4 flex gap-2 flex-wrap">
+                        <span class="text-xs bg-blue-600/70 px-3 py-1 rounded-full">Audio</span>
+                        <span class="text-xs bg-blue-600/70 px-3 py-1 rounded-full">Technik</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-xl group bg-gradient-to-br from-gray-300 dark:from-gray-800 to-gray-400 dark:to-gray-900 border border-gray-300 dark:border-white/10 hover-glow">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600/40 to-blue-600/40 group-hover:from-purple-600/60 group-hover:to-blue-600/60 transition duration-700"></div>
+                <div class="absolute inset-0 bg-black/30 p-10 flex flex-col justify-end text-white">
+                    <h4 class="font-bold text-2xl mb-2">🌐 Websiten Entwicklung</h4>
+                    <p class="text-sm opacity-90">Diese Website wurde von mir entwickelt. Ein modernes Portfolio mit HTML, CSS, JavaScript und Tailwind CSS</p>
+                    <div class="mt-4 flex gap-2 flex-wrap">
+                        <span class="text-xs bg-purple-600/70 px-3 py-1 rounded-full">HTML</span>
+                        <span class="text-xs bg-purple-600/70 px-3 py-1 rounded-full">Tailwind</span>
+                        <span class="text-xs bg-purple-600/70 px-3 py-1 rounded-full">Design</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kontakt" class="py-24 bg-gray-50 dark:bg-gradient-to-b dark:from-black dark:to-[#0a0a0a]">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-4 text-black dark:text-white">
+                Lass uns uns <span class="gradient-text">austauschen</span>.
+            </h2>
+            <p class="text-gray-700 dark:text-gray-400 mb-12">Kontaktiere mich für Fragen, Anfragen oder einfach zum Plaudern</p>
+            
+            <div class="bg-white dark:bg-gradient-to-br dark:from-[#1c1c1e] dark:to-[#0a0a0a] p-12 rounded-[3rem] border border-gray-200 dark:border-white/10 hover-glow mb-12 shadow-lg dark:shadow-xl">
+                <p class="text-lg font-semibold mb-6 text-black dark:text-white">📧 Direkter Kontakt</p>
+                <div class="relative inline-block group">
+                    <a href="mailto:jendrik@jungheim.site" class="text-2xl md:text-4xl font-bold gradient-text hover:opacity-80 transition break-all cursor-pointer" id="emailLink">
+                        jendrik@jungheim.site
+                    </a>
+                    <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-black dark:bg-white text-white dark:text-black px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none">
+                        Klick zum Kopieren!
+                    </div>
+                </div>
+                
+                <div class="my-8 h-px bg-gray-300 dark:bg-white/10"></div>
+                
+                <p class="text-lg font-semibold mb-6 text-black dark:text-white">🔗 Soziale Netzwerke</p>
+                <div class="flex justify-center space-x-6 flex-wrap gap-4">
+                    <a href="https://de.linkedin.com/in/jendrik-jungheim" target="_blank" class="bg-blue-600/20 hover:bg-blue-600/40 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-full font-semibold apple-hover transition border border-blue-600/30 dark:border-blue-600/50">
+                        🔗 LinkedIn
+                    </a>
+                    <a href="https://instagram.com/jendrik.jungheim" target="_blank" class="bg-pink-600/20 hover:bg-pink-600/40 text-pink-600 dark:text-pink-400 px-6 py-3 rounded-full font-semibold apple-hover transition border border-pink-600/30 dark:border-pink-600/50">
+                        📷 Instagram
+                    </a>
+                    <a href="https://github.com/Zoggo1" target="_blank" class="bg-gray-600/20 hover:bg-gray-600/40 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-full font-semibold apple-hover transition border border-gray-600/30 dark:border-gray-600/50">
+                        💻 GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 bg-black border-t border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Jendrik Jungheim</h3>
+                    <p class="text-gray-400 text-sm">Ein modernes Portfolio für meine Projekte und Fähigkeiten</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Navigation</h4>
+                    <div class="space-y-2 text-sm">
+                        <a href="#ueber-mich" class="text-gray-400 hover:text-blue-600 transition block">Über mich</a>
+                        <a href="#skills" class="text-gray-400 hover:text-blue-600 transition block">Skills</a>
+                        <a href="#projekte" class="text-gray-400 hover:text-blue-600 transition block">Projekte</a>
+                        <a href="#kontakt" class="text-gray-400 hover:text-blue-600 transition block">Kontakt</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Links</h4>
+                    <div class="space-y-2 text-sm">
+                        <a href="https://github.com/Zoggo1" class="text-gray-400 hover:text-blue-600 transition block">GitHub</a>
+                        <a href="https://instagram.com/jendrik.jungheim" class="text-gray-400 hover:text-pink-600 transition block">Instagram</a>
+                        <a href="https://de.linkedin.com/in/jendrik-jungheim" class="text-gray-400 hover:text-blue-600 transition block">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-400 text-xs uppercase tracking-widest">
+                <p>© 2026 Jendrik Jungheim | All rights reserved</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="impressum.html" class="hover:text-blue-600 transition">Impressum</a>
+                    <a href="#datenschutz" class="hover:text-blue-600 transition">Datenschutz</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
 </body>
-</html>
+</html> 
