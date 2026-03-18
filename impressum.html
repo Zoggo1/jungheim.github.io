@@ -1,1 +1,163 @@
-In work
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressum | Jendrik Jungheim Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { darkMode: 'class' }
+        // Set dark mode as default
+        if (typeof window !== 'undefined') {
+            document.documentElement.classList.add('dark');
+        }
+        function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; }
+        .glass { backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); }
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-black text-white transition-colors duration-500 font-light">
+
+    <nav class="fixed w-full z-50 glass bg-white/10 border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
+                jungheim.site
+            </a>
+
+            <div class="flex items-center space-x-6 text-sm font-medium">
+                <a href="index.html#ueber-mich" class="hover:text-blue-600 transition">Über mich</a>
+                <a href="index.html#skills" class="hover:text-blue-600 transition">Skills</a>
+                <a href="index.html#projekte" class="hover:text-blue-600 transition">Projekte</a>
+                <a href="index.html#kontakt" class="hover:text-blue-600 transition">Kontakt</a>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100/10 hover:bg-gray-100/20 transition">🌓</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 min-h-screen">
+        <div class="max-w-4xl mx-auto px-6 py-20">
+            <h1 class="text-5xl font-bold mb-4">
+                <span class="gradient-text">Impressum</span>
+            </h1>
+            <p class="text-gray-400 mb-12">Rechtliche Informationen</p>
+
+            <div class="space-y-12">
+                <section>
+                    <h2 class="text-3xl font-bold mb-6">Verantwortlich für den Inhalt</h2>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-4">
+                        <p>
+                            <strong>Name:</strong><br>
+                            Jendrik Jungheim
+                        </p>
+                        <p>
+                            <strong>Status:</strong><br>
+                            Schüler
+                        </p>
+                        <p>
+                            <strong>E-Mail:</strong><br>
+                            <a href="mailto:jendrik@jungheim.site" class="text-blue-600 hover:underline">jendrik@jungheim.site</a>
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-3xl font-bold mb-6">Haftungsausschluss</h2>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-4 text-gray-300">
+                        <h3 class="text-xl font-semibold text-white">Haftung für Inhalte</h3>
+                        <p>
+                            Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit 
+                            und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter sind wir 
+                            gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. 
+                            Nach §§ 8 bis 10 des TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder 
+                            gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige 
+                            Tätigkeit hinweisen.
+                        </p>
+
+                        <h3 class="text-xl font-semibold text-white mt-6">Haftung für Links</h3>
+                        <p>
+                            Unsere Website enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. 
+                            Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten 
+                            Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten 
+                            wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren 
+                            zum Zeitpunkt der Verlinkung nicht erkennbar.
+                        </p>
+
+                        <h3 class="text-xl font-semibold text-white mt-6">Urheberrecht</h3>
+                        <p>
+                            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen 
+                            Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der 
+                            Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des Autors oder Urhebers. Downloads und 
+                            Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-3xl font-bold mb-6">Datenschutz</h2>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-4 text-gray-300">
+                        <p>
+                            Wir nehmen den Schutz Ihrer persönlichen Daten ernst. Diese Website wird gehostet und ist nicht kommerzielle. 
+                            Wir erfassen keine personenbezogenen Daten durch diese Website, sofern nicht durch Kontaktformulare oder 
+                            E-Mail-Korrespondenz.
+                        </p>
+                        <p>
+                            <strong>Cookies:</strong> Diese Website verwendet keine Tracking-Cookies oder Analytics-Tools, die persönliche 
+                            Daten sammeln.
+                        </p>
+                        <p>
+                            <strong>Externe Links:</strong> Wenn Sie auf externe Links klicken, unterliegen Sie deren Datenschutzrichtlinien.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-3xl font-bold mb-6">Kontakt & Support</h2>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-8">
+                        <p class="mb-4">
+                            Bei Fragen zu diesem Impressum oder zur Website kontaktiere mich unter:
+                        </p>
+                        <a href="mailto:jendrik@jungheim.site" class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full font-bold hover:opacity-80 transition">
+                            Kontakt aufnehmen
+                        </a>
+                    </div>
+                </section>
+
+                <section class="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-white/10 rounded-2xl p-8">
+                    <p class="text-gray-300 text-sm">
+                        <strong>Stand:</strong> März 2026<br>
+                        <strong>Hinweis:</strong> Dieses Impressum unterliegt deutschem Recht und wird regelmäßig aktualisiert.
+                    </p>
+                </section>
+            </div>
+
+            <div class="mt-20 text-center">
+                <a href="index.html" class="inline-block text-blue-600 hover:underline font-semibold">
+                    ← Zurück zur Startseite
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-12 bg-black border-t border-white/10 mt-20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-gray-400 text-xs uppercase tracking-widest">
+                <p>© 2026 Jendrik Jungheim | All rights reserved</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="impressum.html" class="hover:text-blue-600 transition">Impressum</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
