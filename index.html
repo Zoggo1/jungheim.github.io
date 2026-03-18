@@ -153,7 +153,7 @@
 
     <nav class="fixed w-full z-50 glass bg-white/80 dark:bg-black/80 border-b border-gray-200 dark:border-white/10">
         <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition hover-letter-spacing">
+            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
                 jungheim.site
             </a>
 
@@ -264,6 +264,7 @@
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-xl group bg-gradient-to-br from-gray-300 dark:from-gray-800 to-gray-400 dark:to-gray-900 border border-gray-300 dark:border-white/10 hover-glow">
+                <img src="Veranstaltung_Forum.jpg" alt="Technische Unterstützung Forum" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-br from-blue-600/40 to-purple-600/40 group-hover:from-blue-600/60 group-hover:to-purple-600/60 transition duration-700"></div>
                 <div class="absolute inset-0 bg-black/30 p-10 flex flex-col justify-end text-white">
                     <h4 class="font-bold text-2xl mb-2">🎤 Technische Unterstützung Forum</h4>
@@ -275,6 +276,7 @@
                 </div>
             </div>
             <div class="relative h-96 rounded-[2.5rem] overflow-hidden apple-hover shadow-xl group bg-gradient-to-br from-gray-300 dark:from-gray-800 to-gray-400 dark:to-gray-900 border border-gray-300 dark:border-white/10 hover-glow">
+                <img src="Webseiten_entwicklung.png" alt="Websiten Entwicklung" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-br from-purple-600/40 to-blue-600/40 group-hover:from-purple-600/60 group-hover:to-blue-600/60 transition duration-700"></div>
                 <div class="absolute inset-0 bg-black/30 p-10 flex flex-col justify-end text-white">
                     <h4 class="font-bold text-2xl mb-2">🌐 Websiten Entwicklung</h4>
@@ -358,6 +360,24 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = this.getAttribute('href');
+                if (target === '#') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const targetElement = document.querySelector(target);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 </html> 
