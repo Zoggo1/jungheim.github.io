@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,22 @@
     <script>
         tailwind.config = { darkMode: 'class' }
         function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
+        function toggleMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        function smoothScrollToHash(event) {
+            const target = event.currentTarget.getAttribute('href');
+            if (target && target.startsWith('#') && target.length > 1) {
+                event.preventDefault();
+                const element = document.querySelector(target);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', smoothScrollToHash);
+            });
+        });
     </script>
     <style>
 	html {scroll-behavior: smooth;}
@@ -22,20 +38,37 @@
 <body class="bg-[#f5f5f7] text-[#1d1d1f] dark:bg-black dark:text-white transition-colors duration-500 font-light">
 
     <nav class="fixed w-full z-50 glass bg-white/70 dark:bg-[#1c1c1e]/70 border-b border-gray-200 dark:border-white/10">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition">
-    Heimatfest Schwelm<span/span>
-</a>
-
-            <div class="flex items-center space-x-6 text-sm font-medium">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold tracking-tight hover:opacity-80 transition">Heimatfest Schwelm</a>
+            <div class="flex items-center gap-3 md:gap-6">
+                <button onclick="toggleMenu()" class="md:hidden p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
+                    <span class="sr-only">Menü öffnen</span>
+                    <svg class="w-6 h-6 text-[#1d1d1f] dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="#Programm" class="hover:text-red-600 transition">Programm</a>
+                    <a href="#zeiten" class="hover:text-red-600 transition">Öffnungszeiten</a>
+                    <a href="#attraktionen" class="hover:text-red-600 transition">Attraktionen</a>
+                    <a href="#anfahrt" class="hover:text-red-600 transition">Anfahrt</a>
+                    <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover">☀️</button>
+                    <a href="https://www.instagram.com/schwelmerheimatfest/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-4 rounded-full apple-hover shadow-lg inline-flex items-center justify-center">
+                        <span class="sr-only">Instagram</span>
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7.25a4.75 4.75 0 1 1 0 9.5a4.75 4.75 0 0 1 0-9.5zm0 1.5a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5zm4.75-.75a1.25 1.25 0 1 1 0 2.5a1.25 1.25 0 0 1 0-2.5z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <div class="flex flex-col gap-3 bg-white/90 dark:bg-[#1c1c1e]/90 rounded-3xl p-4 border border-gray-200 dark:border-white/10 glass">
                 <a href="#Programm" class="hover:text-red-600 transition">Programm</a>
-		<a href="#zeiten" class="hover:text-red-600 transition">Öffnungszeiten</a>
+                <a href="#zeiten" class="hover:text-red-600 transition">Öffnungszeiten</a>
                 <a href="#attraktionen" class="hover:text-red-600 transition">Attraktionen</a>
-		<a href="#anfahrt" class="hover:text-red-600 transition">Anfahrt</a>
-                <button onclick="toggleDarkMode()" class="p-2 rounded-full bg-gray-100 dark:bg-[#2c2c2e] apple-hover">🌙</button>
-		<a href="https://www.instagram.com/schwelmerheimatfest/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white px-8 py-4 rounded-full font-bold apple-hover shadow-lg flex items-center gap-2">
-    <span>📸</span> Instagram
-</a>
+                <a href="#anfahrt" class="hover:text-red-600 transition">Anfahrt</a>
+                <button onclick="toggleDarkMode()" class="py-3 px-4 rounded-full bg-gray-100 dark:bg-[#2c2c2e] text-sm font-medium">☀️ Theme</button>
+                <a href="https://www.instagram.com/schwelmerheimatfest/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-4 rounded-full apple-hover shadow-lg inline-flex items-center justify-center">
+                    <span class="sr-only">Instagram</span>
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7.25a4.75 4.75 0 1 1 0 9.5a4.75 4.75 0 0 1 0-9.5zm0 1.5a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5zm4.75-.75a1.25 1.25 0 1 1 0 2.5a1.25 1.25 0 0 1 0-2.5z"/></svg>
+                </a>
             </div>
         </div>
     </nav>
@@ -131,9 +164,10 @@
                 <div class="relative h-80 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group">
                     <img src="breakdance.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end text-white">
-		<a href="https://www.instagram.com/breakdance_bonner/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white px-8 py-0 rounded-full font-bold apple-hover shadow-lg flex items-center gap-2">
-    <span>📸</span> Instagram
-</a>
+                        <a href="https://www.instagram.com/breakdance_bonner/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-2 rounded-full apple-hover shadow-lg inline-flex items-center justify-center w-12 h-12">
+                            <span class="sr-only">Instagram</span>
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.263 2.242 1.325 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.325 3.608-.975.975-2.242 1.263-3.608 1.325-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.325-.975-.975-1.263-2.242-1.325-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.325-3.608.975-.975 2.242-1.263 3.608-1.325C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.775.131 4.6.379 3.58 1.399 2.561 2.418 2.313 3.593 2.254 4.87 2.196 6.149 2.183 6.559 2.183 12c0 5.441.013 5.851.071 7.13.059 1.277.307 2.452 1.326 3.471 1.02 1.02 2.195 1.268 3.472 1.326C8.332 23.987 8.741 24 12 24s3.668-.013 4.948-.072c1.277-.059 2.452-.307 3.472-1.326 1.02-1.02 1.268-2.195 1.326-3.472.058-1.279.071-1.689.071-7.13 0-5.441-.013-5.851-.071-7.13-.059-1.277-.307-2.452-1.326-3.472C19.4.379 18.225.131 16.948.072 15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 0 0 2.882 1.44 1.44 0 0 0 0-2.882z"/></svg>
+                        </a>
                         <h4 class="font-bold text-lg">Break Dance No2</h4>
                         <p class="text-sm opacity-80 italic">Standort: Neumarkt</p>
 			<p class="text-sm opacity-80 italic">Schausteller: Bonner Witten</p>
@@ -142,9 +176,10 @@
                 <div class="relative h-80 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group">
                     <img src="autoscooter.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end text-white">
-		<a href="https://www.instagram.com/autoscooterdrivein/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white px-8 py-0 rounded-full font-bold apple-hover shadow-lg flex items-center gap-2">
-    <span>📸</span> Instagram
-</a>
+                        <a href="https://www.instagram.com/autoscooterdrivein/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-2 rounded-full apple-hover shadow-lg inline-flex items-center justify-center w-12 h-12">
+                            <span class="sr-only">Instagram</span>
+                            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.35 3.608 1.325.975.975 1.263 2.242 1.325 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.35 2.633-1.325 3.608-.975.975-2.242 1.263-3.608 1.325-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.35-3.608-1.325-.975-.975-1.263-2.242-1.325-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.35-2.633 1.325-3.608.975-.975 2.242-1.263 3.608-1.325C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.013 7.052.072 5.775.131 4.6.379 3.58 1.399 2.561 2.418 2.313 3.593 2.254 4.87 2.196 6.149 2.183 6.559 2.183 12c0 5.441.013 5.851.071 7.13.059 1.277.307 2.452 1.326 3.471 1.02 1.02 2.195 1.268 3.472 1.326C8.332 23.987 8.741 24 12 24s3.668-.013 4.948-.072c1.277-.059 2.452-.307 3.472-1.326 1.02-1.02 1.268-2.195 1.326-3.472.058-1.279.071-1.689.071-7.13 0-5.441-.013-5.851-.071-7.13-.059-1.277-.307-2.452-1.326-3.472C19.4.379 18.225.131 16.948.072 15.668.013 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a3.999 3.999 0 1 1 0-7.998 3.999 3.999 0 0 1 0 7.998zm6.406-11.845a1.44 1.44 0 1 0 0 2.882 1.44 1.44 0 0 0 0-2.882z"/></svg>
+                        </a>
                         <h4 class="font-bold text-lg text-white">Autoscooter</h4>
                         <p class="text-sm opacity-80 italic">Standort: Neumarkt</p>
 			<p class="text-sm opacity-80 italic">Schausteller: Frank G. Schmidt</p>
