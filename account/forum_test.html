@@ -19,7 +19,7 @@
             padding: 2rem;
             color: #111827;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
             background: #f8fafc;
         }
         .background-panel {
@@ -68,20 +68,24 @@
         .topbar-left .brand-strip {
             text-transform: uppercase;
             letter-spacing: 0.22em;
-            font-size: 0.78rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #2563eb;
         }
         body.dark .topbar-left .brand-strip {
             color: #93c5fd;
         }
-        .topbar h1 {
+        .topbar .meta {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.7;
             margin: 0;
-            font-size: clamp(1.75rem, 2.2vw, 2.2rem);
-            color: #111827;
         }
-        body.dark .topbar h1 {
-            color: #f8fafc;
+        body.dark .topbar .meta {
+            color: #cbd5e1;
+        }
+        .notice {
+            text-align: center;
         }
         .topbar .meta {
             color: #475569;
@@ -404,7 +408,6 @@
         <div class="topbar">
             <div class="topbar-left">
                 <div class="brand-strip">Forum Heimatfest Schwelm</div>
-                <h1>Forum Heimatfest Schwelm</h1>
                 <p class="meta">Verfasse Beiträge, hilf anderen und diskutiere mit der Community.</p>
                 <p class="meta" id="userInfo">Lade...</p>
                 <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Du bist eingeloggt als Administrator</p>
