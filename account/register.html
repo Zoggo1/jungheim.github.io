@@ -211,6 +211,15 @@
             setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
         });
 
+        if (typeof supabase === 'undefined') {
+            const msgDiv = document.getElementById('message');
+            msgDiv.style.display = 'block';
+            msgDiv.className = 'error';
+            msgDiv.innerText = 'Supabase konnte nicht geladen werden. Bitte Seite neu laden.';
+            return;
+        }
+
+        client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const registerForm = document.getElementById('registerForm');
         if (registerForm) {

@@ -18,6 +18,11 @@
             display: flex;
             justify-content: center;
             padding: 2rem;
+            color: #111827;
+        }
+        body.dark {
+            background: radial-gradient(circle at top, #020617 0%, #111827 35%, #0b1220 100%);
+            color: #e2e8f0;
         }
         .layout {
             width: min(1100px, 100%);
@@ -38,12 +43,23 @@
             color: #475569;
             font-size: 0.95rem;
         }
+        body.dark .topbar h1 {
+            color: #f8fafc;
+        }
+        body.dark .topbar .meta {
+            color: #cbd5e1;
+        }
         .card {
             background: rgba(255,255,255,0.94);
             border-radius: 32px;
             box-shadow: 0 35px 90px rgba(15,23,42,0.12);
             overflow: hidden;
             border: 1px solid rgba(148,163,184,0.25);
+        }
+        body.dark .card {
+            background: rgba(15, 23, 42, 0.92);
+            border-color: rgba(148,163,184,0.12);
+            box-shadow: 0 35px 90px rgba(0,0,0,0.35);
         }
         .panel {
             display: grid;
@@ -55,11 +71,18 @@
             border-right: 1px solid #e2e8f0;
             background: #f8fafc;
         }
+        body.dark .sidebar {
+            border-right-color: rgba(148,163,184,0.15);
+            background: rgba(15,23,42,0.75);
+        }
         .sidebar h2 {
             margin-top: 0;
             margin-bottom: 1rem;
             color: #0f172a;
             font-size: 1.15rem;
+        }
+        body.dark .sidebar h2 {
+            color: #e2e8f0;
         }
         .nav-list {
             list-style: none;
@@ -84,6 +107,14 @@
             background: #e0e7ff;
             color: #1e3a8a;
         }
+        body.dark .nav-list button {
+            color: #cbd5e1;
+        }
+        body.dark .nav-list button.active,
+        body.dark .nav-list button:hover {
+            background: rgba(59,130,246,0.18);
+            color: #bfdbfe;
+        }
         .panel-main {
             padding: 2rem;
         }
@@ -92,12 +123,20 @@
             color: #0f172a;
             font-size: 1.5rem;
         }
+        body.dark .panel-main h2 {
+            color: #e2e8f0;
+        }
         .toolbar {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 1rem;
             margin-bottom: 1.5rem;
+        }
+        body.dark .toolbar .button,
+        body.dark .toolbar .button-link {
+            background: #1f2937;
+            color: #e2e8f0;
         }
         .toolbar .button-group {
             display: flex;
@@ -119,6 +158,18 @@
         .button-link.secondary {
             background: #0f172a;
         }
+        .theme-toggle {
+            border-radius: 999px;
+            padding: 0.75rem 1rem;
+            min-width: 3.5rem;
+            font-size: 0.9rem;
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 1px solid rgba(15,23,42,0.08);
+        }
+        .theme-toggle:hover {
+            filter: brightness(0.95);
+        }
         .button:hover,
         .button-link:hover {
             filter: brightness(1.05);
@@ -137,6 +188,11 @@
             color: #1e40af;
             margin-bottom: 1.5rem;
         }
+        body.dark .notice {
+            background: rgba(59,130,246,0.12);
+            border-color: rgba(59,130,246,0.25);
+            color: #bfdbfe;
+        }
         .post-form {
             display: grid;
             gap: 1rem;
@@ -151,6 +207,9 @@
             color: #334155;
             font-weight: 600;
         }
+        body.dark .input-group label {
+            color: #cbd5e1;
+        }
         .input-group input,
         .input-group textarea {
             width: 100%;
@@ -160,6 +219,12 @@
             font-size: 1rem;
             color: #0f172a;
             background: white;
+        }
+        body.dark .input-group input,
+        body.dark .input-group textarea {
+            border-color: #334155;
+            background: #111827;
+            color: #e2e8f0;
         }
         .input-group textarea {
             min-height: 160px;
@@ -184,15 +249,26 @@
             padding: 1.5rem;
             box-shadow: 0 15px 35px rgba(15,23,42,0.07);
         }
+        body.dark .post-card {
+            background: #0f172a;
+            border-color: #334155;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        }
         .post-card h3 {
             margin: 0 0 0.5rem;
             font-size: 1.15rem;
             color: #0f172a;
         }
+        body.dark .post-card h3 {
+            color: #f8fafc;
+        }
         .post-meta {
             margin: 0 0 1rem;
             color: #64748b;
             font-size: 0.92rem;
+        }
+        body.dark .post-meta {
+            color: #94a3b8;
         }
         .empty-state {
             padding: 2rem;
@@ -201,6 +277,11 @@
             border: 1px dashed #cbd5e1;
             color: #475569;
             text-align: center;
+        }
+        body.dark .empty-state {
+            background: rgba(30,41,59,0.8);
+            border-color: rgba(148,163,184,0.28);
+            color: #cbd5e1;
         }
     </style>
 </head>
@@ -213,6 +294,7 @@
                 <p class="meta" id="userInfo">Lade...</p>
             </div>
             <div class="button-group">
+                <button id="themeToggle" class="button secondary theme-toggle">Dark Mode</button>
                 <a href="settings.html" class="button-link secondary">Profil</a>
                 <button id="logoutButton" class="button secondary">Abmelden</button>
             </div>
@@ -264,10 +346,26 @@
         const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
         const STORAGE_KEY = 'forum_posts_local';
+        const THEME_KEY = 'themePreference';
         const tableName = 'forum_posts';
         let client = null;
         let currentUser = null;
         let allPosts = [];
+
+        function setTheme(theme) {
+            document.body.classList.toggle('dark', theme === 'dark');
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                toggle.textContent = theme === 'dark' ? 'White Mode' : 'Dark Mode';
+            }
+            localStorage.setItem(THEME_KEY, theme);
+        }
+
+        function initTheme() {
+            const stored = localStorage.getItem(THEME_KEY);
+            const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(theme);
+        }
 
         function formatDate(dateString) {
             const date = new Date(dateString);
@@ -400,6 +498,14 @@
         }
 
         async function init() {
+            initTheme();
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+                });
+            }
+
             if (typeof supabase === 'undefined') {
                 document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;">Supabase konnte nicht geladen werden.</div>';
                 return;
