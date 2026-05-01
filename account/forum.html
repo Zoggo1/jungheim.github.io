@@ -292,6 +292,7 @@
                 <h1>Forum</h1>
                 <p class="meta">Schreibe Nachrichten, diskutiere mit anderen und verwalte dein Profil.</p>
                 <p class="meta" id="userInfo">Lade...</p>
+            <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Admin</p>
             </div>
             <div class="button-group">
                 <button id="themeToggle" class="button secondary theme-toggle">Dark Mode</button>
@@ -348,9 +349,11 @@
         const STORAGE_KEY = 'forum_posts_local';
         const THEME_KEY = 'themePreference';
         const tableName = 'forum_posts';
+        const ADMIN_USERS = ['admin@jungheim.site'];
         let client = null;
         let currentUser = null;
         let allPosts = [];
+        let isAdmin = false;
 
         function setTheme(theme) {
             document.body.classList.toggle('dark', theme === 'dark');
@@ -403,6 +406,15 @@
                     <p class="post-meta">${post.author_name || post.author_email || 'Unbekannt'} · ${formatDate(post.created_at || post.createdAt)}</p>
                     <p>${post.content.replace(/\n/g, '<br>')}</p>
                 `;
+                if (isAdmin || post.author_email === currentUser.email) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'button secondary delete-button';
+                    deleteButton.textContent = 'Löschen';
+                    deleteButton.style.marginTop = '1rem';
+                    deleteButton.addEventListener('click', () => deletePost(post.id));
+                    card.appendChild(deleteButton);
+                }
                 container.appendChild(card);
             }
         }
@@ -414,7 +426,20 @@
         function loadLocalPosts() {
             try {
                 const saved = localStorage.getItem(STORAGE_KEY);
-                return saved ? JSON.parse(saved) : [];
+                if (!saved) return [];
+                const posts = JSON.parse(saved);
+                let changed = false;
+                const normalized = posts.map(post => {
+                    if (!post.id) {
+                        post.id = crypto.randomUUID ? crypto.randomUUID() : 'post-' + Date.now() + '-' + Math.floor(Math.random() * 1000000);
+                        changed = true;
+                    }
+                    return post;
+                });
+                if (changed) {
+                    saveLocalPosts(normalized);
+                }
+                return normalized;
             } catch {
                 return [];
             }
@@ -459,6 +484,7 @@
             }
 
             const newPost = {
+                id: crypto.randomUUID ? crypto.randomUUID() : 'post-' + Date.now(),
                 title,
                 content,
                 author_name: currentUser.user_metadata?.full_name || currentUser.email,
@@ -469,6 +495,7 @@
             try {
                 const { data, error } = await client.from(tableName).insert([{ title, content, author_name: newPost.author_name, author_email: newPost.author_email }]);
                 if (!error && data) {
+                    newPost.id = data[0].id || newPost.id;
                     newPost.created_at = data[0].created_at || newPost.createdAt;
                     allPosts.unshift(newPost);
                     saveLocalPosts(allPosts);
@@ -489,6 +516,31 @@
                 document.getElementById('postForm').reset();
                 showMessage('Beitrag lokal gespeichert. Supabase-Datenbank möglich nicht verfügbar.', 'success');
             }
+        }
+
+        async function deletePost(postId) {
+            const postIndex = allPosts.findIndex(post => post.id === postId);
+            if (postIndex === -1) return;
+            const post = allPosts[postIndex];
+            if (!isAdmin && post.author_email !== currentUser.email) {
+                showMessage('Du darfst diesen Beitrag nicht löschen.', 'error');
+                return;
+            }
+
+            try {
+                if (typeof supabase !== 'undefined') {
+                    const { error } = await client.from(tableName).delete().eq('id', postId);
+                    if (error) throw error;
+                }
+            } catch (err) {
+                console.warn('Supabase delete failed', err);
+            }
+
+            allPosts.splice(postIndex, 1);
+            saveLocalPosts(allPosts);
+            renderPosts(allPosts, 'postList');
+            renderPosts(allPosts.filter(p => p.author_email === currentUser.email), 'myPostList');
+            showMessage('Beitrag gelöscht.', 'success');
         }
 
         function switchTab(event) {
@@ -517,7 +569,12 @@
                 return;
             }
             currentUser = data.user;
+            isAdmin = ADMIN_USERS.includes(currentUser.email);
             document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (currentUser.email || 'Unbekannt');
+            const adminInfo = document.getElementById('adminInfo');
+            if (adminInfo) {
+                adminInfo.style.display = isAdmin ? 'block' : 'none';
+            }
             document.getElementById('logoutButton').addEventListener('click', async () => {
                 await client.auth.signOut();
                 window.location.href = 'login.html';
