@@ -61,22 +61,24 @@
         <h2>Einloggen</h2>
         <p>Melde dich mit deiner E-Mail und deinem Passwort an.</p>
 
-        <div class="input-group">
-            <label for="email">E-Mail</label>
-            <input type="email" id="email" placeholder="beispiel@mail.de">
-        </div>
-        <div class="input-group">
-            <label for="password">Passwort</label>
-            <input type="password" id="password" placeholder="••••••••">
-        </div>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" placeholder="beispiel@mail.de" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Passwort</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
 
-        <button type="button" onclick="handleLogin()">Einloggen</button>
+            <button type="submit">Einloggen</button>
 
-        <div id="message"></div>
+            <div id="message"></div>
 
-        <div class="footer-text">
-            Noch kein Konto? <a href="register.html">Hier registrieren</a>
-        </div>
+            <div class="footer-text">
+                Noch kein Konto? <a href="register.html">Hier registrieren</a>
+            </div>
+        </form>
     </div>
 
     <script>
@@ -87,6 +89,14 @@
         window.addEventListener('DOMContentLoaded', () => {
             if (typeof supabase !== 'undefined') {
                 client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    handleLogin();
+                });
             }
         });
 
@@ -127,7 +137,7 @@
                     msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung...';
                     msgDiv.className = 'success';
                     setTimeout(() => {
-                        window.location.href = 'jungheim.site';
+                        window.location.href = 'settings.html';
                     }, 1500);
                 } else {
                     msgDiv.innerText = 'Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten.';
