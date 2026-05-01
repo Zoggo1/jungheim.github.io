@@ -3,131 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Bereich</title>
+    <title>Registrieren | Dein Projekt</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* Hier ist das moderne Design (CSS) direkt drin */
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5; /* Hellgrauer Hintergrund wie bei modernen Apps */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        .login-card {
+        .register-card {
             background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
         }
 
-        h2 { color: #1a1a1a; margin-bottom: 0.5rem; }
-        p { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        h2 { color: #2d3748; margin-bottom: 0.5rem; font-weight: 700; }
+        p { color: #718096; margin-bottom: 2rem; font-size: 0.95rem; }
 
         .input-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 600;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 2px solid #edf2f7;
+            border-radius: 10px;
             box-sizing: border-box;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         input:focus {
-            border-color: #4a90e2;
+            border-color: #667eea;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #4a90e2;
+            padding: 14px;
+            background: #667eea;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: transform 0.2s, background 0.3s;
+            margin-top: 1rem;
         }
 
         button:hover {
-            background-color: #357abd;
+            background: #5a67d8;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         #message {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            padding: 10px;
-            border-radius: 6px;
-            display: none; /* Erst anzeigen, wenn Nachricht kommt */
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
         }
 
-        .error { background: #fee2e2; color: #dc2626; display: block !important; }
-        .success { background: #dcfce7; color: #16a34a; display: block !important; }
+        .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; display: block !important; }
+        .success { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; display: block !important; }
+        
+        .footer-text {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .footer-text a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <h2>Willkommen</h2>
-    <p>Bitte gib deine Daten ein</p>
+<div class="register-card">
+    <h2>Account erstellen</h2>
+    <p>Tritt unserer Community bei</p>
     
     <div class="input-group">
-        <input type="email" id="email" placeholder="E-Mail Adresse">
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" placeholder="beispiel@mail.de">
     </div>
     <div class="input-group">
-        <input type="password" id="password" placeholder="Passwort">
+        <label for="password">Passwort (min. 6 Zeichen)</label>
+        <input type="password" id="password" placeholder="••••••••">
     </div>
     
-    <button onclick="handleLogin()">Einloggen</button>
+    <button onclick="handleRegister()">Jetzt registrieren</button>
     
     <div id="message"></div>
+
+    <div class="footer-text">
+        Bereits ein Konto? <a href="login.html">Hier einloggen</a>
+    </div>
 </div>
 
 <script>
-    // 1. Verbindung zu Supabase (Ersetze die Werte mit deinen aus der config.js)
-    const SUPABASE_URL = 'DEINE_SUPABASE_URL_HIER';
-    const SUPABASE_KEY = 'DEIN_SUPABASE_KEY_HIER';
-    
-    // Hier wird der Client erstellt
-    const supabase = lib.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // DEINE DATEN HIER EINTRAGEN
+    const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co'; 
+    const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
 
-    async function handleLogin() {
+    // WICHTIG: Die Library heißt im CDN meistens 'supabase'
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function handleRegister() {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const msgDiv = document.getElementById('message');
 
-        msgDiv.className = ''; 
-        msgDiv.innerText = 'Wird geprüft...';
+        if (!email || password.length < 6) {
+            msgDiv.innerText = "Bitte gib eine E-Mail und ein Passwort (min. 6 Zeichen) ein.";
+            msgDiv.className = 'error';
+            return;
+        }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        msgDiv.className = ''; 
+        msgDiv.innerText = 'Account wird erstellt...';
+        msgDiv.style.display = 'block';
+
+        const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
         });
 
         if (error) {
             msgDiv.innerText = "Fehler: " + error.message;
-            msgDiv.classList.add('error');
+            msgDiv.className = 'error';
         } else {
-            msgDiv.innerText = "Login erfolgreich! Leite weiter...";
-            msgDiv.classList.add('success');
-            // Hier Weiterleitung einfügen, z.B.:
-            // window.location.href = 'dashboard.html';
+            msgDiv.innerText = "Registrierung erfolgreich! Bitte prüfe dein E-Mail Postfach (auch Spam).";
+            msgDiv.className = 'success';
         }
     }
 </script>
