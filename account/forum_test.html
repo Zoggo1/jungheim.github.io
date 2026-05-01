@@ -47,20 +47,55 @@
         .topbar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            padding: 1rem 1.25rem;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(148,163,184,0.22);
+            box-shadow: 0 24px 60px rgba(15,23,42,0.08);
+            backdrop-filter: blur(14px);
+        }
+        body.dark .topbar {
+            background: rgba(15,23,42,0.82);
+            border-color: rgba(148,163,184,0.15);
+        }
+        .topbar-left {
+            display: grid;
+            gap: 0.4rem;
+        }
+        .topbar-left .brand-strip {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #4338ca;
+        }
+        body.dark .topbar-left .brand-strip {
+            color: #93c5fd;
         }
         .topbar h1 {
             margin: 0;
             font-size: clamp(1.75rem, 2.5vw, 2.5rem);
             color: #111827;
-            letter-spacing: 0.01em;
+        }
+        body.dark .topbar h1 {
+            color: #f8fafc;
         }
         .topbar .meta {
             color: #475569;
             font-size: 0.95rem;
             line-height: 1.7;
+            margin: 0;
+        }
+        body.dark .topbar .meta {
+            color: #cbd5e1;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
         .button.icon-button,
         .button-link.icon-button {
@@ -72,9 +107,27 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            border-radius: 999px;
         }
-        body.dark .topbar h1 {
-            color: #f8fafc;
+        .logout-button {
+            border-radius: 999px;
+        }
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 999px;
+            padding: 0.85rem 1.1rem;
+            min-width: auto;
+            font-size: 0.95rem;
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 1px solid rgba(15,23,42,0.08);
+        }
+        body.dark .theme-toggle {
+            background: #1f2937;
+            color: #e2e8f0;
+            border-color: rgba(148,163,184,0.16);
         }
         body.dark .topbar .meta {
             color: #cbd5e1;
@@ -183,6 +236,27 @@
             background: #4338ca;
             color: white;
             text-decoration: none;
+        }
+        .sidebar-divider {
+            margin: 1.75rem 0 1rem;
+            border-top: 1px solid rgba(148,163,184,0.35);
+        }
+        body.dark .sidebar-divider {
+            border-top-color: rgba(148,163,184,0.18);
+        }
+        .sidebar-profile {
+            display: inline-flex;
+            width: 100%;
+            justify-content: center;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
+            font-weight: 700;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+        body.dark .sidebar-profile {
+            background: rgba(255,255,255,0.05);
+            color: #e2e8f0;
         }
         .button.secondary,
         .button-link.secondary {
@@ -319,16 +393,18 @@
     <div class="background-panel"></div>
     <div class="layout">
         <div class="topbar">
-            <div>
+            <div class="topbar-left">
+                <div class="brand-strip">Forum Heimatfest Schwelm</div>
                 <h1>Forum Heimatfest Schwelm</h1>
                 <p class="meta">Verfasse Beiträge, hilf anderen und diskutiere mit der Community.</p>
                 <p class="meta" id="userInfo">Lade...</p>
                 <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Du bist eingeloggt als Administrator</p>
             </div>
-            <div class="button-group">
-                <button id="themeToggle" class="button secondary theme-toggle">🌙 Dark Mode</button>
-                <a href="settings.html" class="button-link secondary icon-button" aria-label="Profil" title="Profil">👤</a>
-                <button id="logoutButton" class="button secondary icon-button" aria-label="Abmelden" title="Abmelden">🚪</button>
+            <div class="topbar-right">
+                <button id="themeToggle" class="button secondary theme-toggle" aria-label="Theme wechseln"><span class="mode-icon">🌙</span><span class="mode-label">Dark Mode</span></button>
+                <button id="logoutButton" class="button secondary icon-button logout-button" aria-label="Abmelden" title="Abmelden">🚪</button>
+            </div>
+        </div>
         <div class="card">
             <div class="panel">
                 <aside class="sidebar">
@@ -338,6 +414,8 @@
                         <button class="tab-button" data-tab="my-posts">Meine Beiträge</button>
                         <button class="tab-button" data-tab="new-post">Neuer Beitrag</button>
                     </div>
+                    <div class="sidebar-divider"></div>
+                    <a href="settings.html" class="button-link secondary sidebar-profile">Profil</a>
                 </aside>
 
                 <main class="panel-main">
