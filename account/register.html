@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrieren</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="config.js"></script>
-    
-    <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
-        .form-container { background: #f4f4f4; padding: 20px; border-radius: 8px; width: 300px; }
-        input { width: 100%; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background-color: #3ecf8e; color: white; border: none; cursor: pointer; border-radius: 4px; }
-        button:hover { background-color: #36b87d; }
-        .msg { margin-top: 10px; font-size: 0.9em; }
-    </style>
-</head>
 <body>
 
 <div class="form-container">
@@ -24,9 +6,6 @@
     <input type="password" id="reg-password" placeholder="Passwort wählen">
     <button onclick="signUp()">Registrieren</button>
     <div id="message" class="msg"></div>
-    <p style="font-size: 0.8em; margin-top: 15px;">
-        Schon ein Konto? <a href="login.html">Hier einloggen</a>
-    </p>
 </div>
 
 <script>
@@ -35,23 +14,33 @@
         const password = document.getElementById('reg-password').value;
         const messageDiv = document.getElementById('message');
 
-        messageDiv.innerText = "Lade...";
+        messageDiv.innerText = "Sende Daten an Supabase...";
 
-        // Supabase Registrierungs-Funktion
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-        });
+        try {
+            // Test, ob Supabase überhaupt geladen wurde
+            if (typeof supabase === 'undefined') {
+                alert("FEHLER: Supabase ist nicht definiert! Prüfe, ob deine config.js richtig geladen wird.");
+                return;
+            }
 
-        if (error) {
-            messageDiv.style.color = "red";
-            messageDiv.innerText = "Fehler: " + error.message;
-        } else {
-            messageDiv.style.color = "green";
-            messageDiv.innerText = "Erfolg! Bitte schau in dein E-Mail-Postfach und bestätige den Link.";
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                // Das zeigt uns den genauen Fehlergrund von Supabase
+                alert("Supabase Fehler: " + error.message);
+                messageDiv.innerText = "Fehler: " + error.message;
+            } else {
+                alert("ERFOLG! Der User wurde angelegt. Check jetzt deine E-Mails.");
+                messageDiv.innerText = "Bestätigungs-Mail wurde versendet!";
+            }
+        } catch (err) {
+            alert("System-Fehler: " + err.message);
+            messageDiv.innerText = "Ein Fehler ist aufgetreten.";
         }
     }
 </script>
 
 </body>
-</html>
