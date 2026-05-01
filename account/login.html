@@ -6,10 +6,41 @@
     <title>Einloggen | Dein Projekt</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root {
+            color-scheme: light;
+            --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: #ffffff;
+            --text-color: #111827;
+            --subtext-color: #475569;
+            --input-bg: #ffffff;
+            --input-border: #e2e8f0;
+            --button-bg: #667eea;
+            --button-hover: #5a67d8;
+            --button-text: #ffffff;
+            --shadow: 0 15px 35px rgba(0,0,0,0.1);
+            --link-color: #667eea;
+        }
+
+        body.dark {
+            color-scheme: dark;
+            --body-bg: radial-gradient(circle at top, #020617 0%, #0b1120 55%, #111827 100%);
+            --card-bg: #111827;
+            --text-color: #e2e8f0;
+            --subtext-color: #cbd5e1;
+            --input-bg: #1f2937;
+            --input-border: #334155;
+            --button-bg: #7c3aed;
+            --button-hover: #8b5cf6;
+            --button-text: #ffffff;
+            --shadow: 0 15px 35px rgba(0,0,0,0.35);
+            --link-color: #93c5fd;
+        }
+
         body {
             margin: 0;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--body-bg);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,26 +48,48 @@
         }
 
         .login-card {
-            background: white;
+            position: relative;
+            background: var(--card-bg);
             padding: 2.5rem;
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             width: 100%;
             max-width: 400px;
             text-align: center;
+            border: 1px solid rgba(148,163,184,0.25);
         }
 
-        h2 { color: #2d3748; margin-bottom: 0.5rem; font-weight: 700; }
-        p { color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .theme-toggle {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: transparent;
+            border: 1px solid var(--input-border);
+            color: var(--text-color);
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-1px);
+        }
+
+        h2 { color: var(--text-color); margin-bottom: 0.5rem; font-weight: 700; }
+        p { color: var(--subtext-color); margin-bottom: 1.5rem; font-size: 0.95rem; }
         .input-group { margin-bottom: 1rem; text-align: left; }
-        label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: #4a5568; font-weight: 600; }
-        input { width: 100%; padding: 12px 16px; border: 2px solid #edf2f7; border-radius: 10px; box-sizing: border-box; font-size: 1rem; transition: all 0.3s ease; }
-        input:focus { border-color: #667eea; outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--subtext-color); font-weight: 600; }
+        input { width: 100%; padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; box-sizing: border-box; font-size: 1rem; transition: all 0.3s ease; background: var(--input-bg); color: var(--text-color); }
+        input::placeholder { color: rgba(71, 85, 105, 0.65); }
+        body.dark input::placeholder { color: rgba(203, 213, 225, 0.65); }
+        input:focus { border-color: var(--button-bg); outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12); }
         button {
             width: 100%;
             padding: 14px;
-            background: #667eea;
-            color: white;
+            background: var(--button-bg);
+            color: var(--button-text);
             border: none;
             border-radius: 10px;
             font-size: 1rem;
@@ -45,19 +98,20 @@
             transition: transform 0.2s, background 0.3s;
             margin-top: 1rem;
         }
-        button:hover { background: #5a67d8; transform: translateY(-1px); }
+        button:hover { background: var(--button-hover); transform: translateY(-1px); }
         button:active { transform: translateY(0); }
 
         #message { margin-top: 1.5rem; font-size: 0.9rem; padding: 12px; border-radius: 8px; display: none; }
-        .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; display: block !important; }
-        .success { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; display: block !important; }
+        .error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; display: block !important; }
+        .success { background: #ecfdf5; color: #166534; border: 1px solid #a7f3d0; display: block !important; }
 
-        .footer-text { margin-top: 1.5rem; font-size: 0.85rem; color: #718096; }
-        .footer-text a { color: #667eea; text-decoration: none; font-weight: 600; }
+        .footer-text { margin-top: 1.5rem; font-size: 0.85rem; color: var(--subtext-color); }
+        .footer-text a { color: var(--link-color); text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="login-card">
+        <button id="themeToggle" type="button" class="theme-toggle">Dark Mode</button>
         <h2>Einloggen</h2>
         <p>Melde dich mit deiner E-Mail und deinem Passwort an.</p>
 
@@ -84,9 +138,27 @@
     <script>
         const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        const THEME_KEY = 'themePreference';
         let client = null;
 
+        function setTheme(theme) {
+            document.body.classList.toggle('dark', theme === 'dark');
+            document.getElementById('themeToggle').textContent = theme === 'dark' ? 'White Mode' : 'Dark Mode';
+            localStorage.setItem(THEME_KEY, theme);
+        }
+
+        function initTheme() {
+            const stored = localStorage.getItem(THEME_KEY);
+            const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(theme);
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+            });
+
             if (typeof supabase !== 'undefined') {
                 client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             }
