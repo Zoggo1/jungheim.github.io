@@ -122,7 +122,7 @@
         <input type="password" id="password" placeholder="••••••••">
     </div>
     
-    <button onclick="handleRegister()">Jetzt registrieren</button>
+    <button type="button" onclick="handleRegister()">Jetzt registrieren</button>
     
     <div id="message"></div>
 
@@ -132,45 +132,58 @@
 </div>
 
 <script>
-    // Diese Funktion wird erst ausgeführt, wenn alles geladen ist
+    const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+    let client = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (typeof supabase !== 'undefined') {
+            client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+    });
+
     async function handleRegister() {
         const msgDiv = document.getElementById('message');
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // 1. Sichtbares Feedback geben, dass der Klick registriert wurde
         msgDiv.style.display = 'block';
-        msgDiv.className = ''; 
+        msgDiv.className = '';
         msgDiv.innerText = 'Verbindung wird aufgebaut...';
 
-        // 2. Sicherheits-Check: Ist Supabase überhaupt geladen?
-        if (typeof supabase === 'undefined') {
-            msgDiv.innerText = "Fehler: Die Supabase-Bibliothek konnte nicht geladen werden. Bitte Seite neu laden oder Adblocker prüfen.";
+        if (!email || !password) {
+            msgDiv.innerText = 'Bitte gib E-Mail und Passwort ein.';
             msgDiv.className = 'error';
             return;
         }
 
-        // 3. Client initialisieren (nur wenn er noch nicht existiert)
-        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co'; 
-        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
-        
-        try {
-            const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        if (password.length < 6) {
+            msgDiv.innerText = 'Das Passwort muss mindestens 6 Zeichen haben.';
+            msgDiv.className = 'error';
+            return;
+        }
 
+        if (!client) {
+            msgDiv.innerText = 'Fehler: Supabase konnte nicht initialisiert werden. Bitte Seite neu laden.';
+            msgDiv.className = 'error';
+            return;
+        }
+
+        try {
             const { data, error } = await client.auth.signUp({
-                email: email,
-                password: password,
+                email,
+                password,
             });
 
             if (error) {
-                msgDiv.innerText = "Fehler: " + error.message;
+                msgDiv.innerText = 'Fehler: ' + error.message;
                 msgDiv.className = 'error';
             } else {
-                msgDiv.innerText = "Erfolg! Bitte schau in dein E-Mail-Postfach.";
+                msgDiv.innerText = 'Erfolg! Bitte schau in dein E-Mail-Postfach.';
                 msgDiv.className = 'success';
             }
         } catch (err) {
-            msgDiv.innerText = "Kritischer Fehler: " + err.message;
+            msgDiv.innerText = 'Kritischer Fehler: ' + err.message;
             msgDiv.className = 'error';
         }
     }
