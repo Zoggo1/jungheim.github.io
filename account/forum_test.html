@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Heimatfest Schwelm</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            color: #111827;
+            position: relative;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+        .background-panel {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(250,250,255,0.82), rgba(245,246,255,0.88)),
+                url('forum-background.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: saturate(1.02) contrast(0.9);
+        }
+        body.dark .background-panel {
+            background-image:
+                linear-gradient(rgba(5,9,23,0.72), rgba(12,18,35,0.78)),
+                url('forum-background.jpg');
+        }
+        body.dark {
+            color: #e2e8f0;
+        }
+        .layout {
+            width: min(1100px, 100%);
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .topbar h1 {
+            margin: 0;
+            font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+            color: #111827;
+            letter-spacing: 0.01em;
+        }
+        .topbar .meta {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .button.icon-button,
+        .button-link.icon-button {
+            width: 3.5rem;
+            min-width: 3.5rem;
+            height: 3.5rem;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        body.dark .topbar h1 {
+            color: #f8fafc;
+        }
+        body.dark .topbar .meta {
+            color: #cbd5e1;
+        }
+        .card {
+            background: rgba(255,255,255,0.94);
+            border-radius: 32px;
+            box-shadow: 0 35px 90px rgba(15,23,42,0.12);
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.25);
+        }
+        body.dark .card {
+            background: rgba(15, 23, 42, 0.92);
+            border-color: rgba(148,163,184,0.12);
+            box-shadow: 0 35px 90px rgba(0,0,0,0.35);
+        }
+        .panel {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 620px;
+        }
+        .sidebar {
+            padding: 2rem;
+            border-right: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        body.dark .sidebar {
+            border-right-color: rgba(148,163,184,0.15);
+            background: rgba(15,23,42,0.75);
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #0f172a;
+            font-size: 1.15rem;
+        }
+        body.dark .sidebar h2 {
+            color: #e2e8f0;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .nav-list button {
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: transparent;
+            color: #334155;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-list button.active,
+        .nav-list button:hover {
+            background: #e0e7ff;
+            color: #1e3a8a;
+        }
+        body.dark .nav-list button {
+            color: #cbd5e1;
+        }
+        body.dark .nav-list button.active,
+        body.dark .nav-list button:hover {
+            background: rgba(59,130,246,0.18);
+            color: #bfdbfe;
+        }
+        .panel-main {
+            padding: 2rem;
+        }
+        .panel-main h2 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.5rem;
+        }
+        body.dark .panel-main h2 {
+            color: #e2e8f0;
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        body.dark .toolbar .button,
+        body.dark .toolbar .button-link {
+            background: #1f2937;
+            color: #e2e8f0;
+        }
+        .toolbar .button-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .button,
+        .button-link {
+            border: none;
+            border-radius: 14px;
+            padding: 0.9rem 1.3rem;
+            cursor: pointer;
+            font-weight: 700;
+            background: #4338ca;
+            color: white;
+            text-decoration: none;
+        }
+        .button.secondary,
+        .button-link.secondary {
+            background: #0f172a;
+        }
+        .theme-toggle {
+            border-radius: 999px;
+            padding: 0.75rem 1rem;
+            min-width: 3.5rem;
+            font-size: 0.9rem;
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 1px solid rgba(15,23,42,0.08);
+        }
+        .theme-toggle:hover {
+            filter: brightness(0.95);
+        }
+        .button:hover,
+        .button-link:hover {
+            filter: brightness(1.05);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .notice {
+            padding: 1.25rem 1.5rem;
+            border-radius: 18px;
+            background: #eff6ff;
+            border: 1px solid #c7d2fe;
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+        }
+        body.dark .notice {
+            background: rgba(59,130,246,0.12);
+            border-color: rgba(59,130,246,0.25);
+            color: #bfdbfe;
+        }
+        .post-form {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .input-group label {
+            font-size: 0.95rem;
+            color: #334155;
+            font-weight: 600;
+        }
+        body.dark .input-group label {
+            color: #cbd5e1;
+        }
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 1rem 1.1rem;
+            font-size: 1rem;
+            color: #0f172a;
+            background: white;
+        }
+        body.dark .input-group input,
+        body.dark .input-group textarea {
+            border-color: #334155;
+            background: #111827;
+            color: #e2e8f0;
+        }
+        .input-group textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 16px;
+            display: none;
+        }
+        .message.success { background: #ecfdf5; color: #166534; border: 1px solid #a7f3d0; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .post-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .post-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(15,23,42,0.07);
+        }
+        body.dark .post-card {
+            background: #0f172a;
+            border-color: #334155;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+        }
+        .post-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.15rem;
+            color: #0f172a;
+        }
+        body.dark .post-card h3 {
+            color: #f8fafc;
+        }
+        .post-meta {
+            margin: 0 0 1rem;
+            color: #64748b;
+            font-size: 0.92rem;
+        }
+        body.dark .post-meta {
+            color: #94a3b8;
+        }
+        .empty-state {
+            padding: 2rem;
+            border-radius: 20px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            color: #475569;
+            text-align: center;
+        }
+        body.dark .empty-state {
+            background: rgba(30,41,59,0.8);
+            border-color: rgba(148,163,184,0.28);
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-panel"></div>
+    <div class="layout">
+        <div class="topbar">
+            <div>
+                <h1>Forum Heimatfest Schwelm</h1>
+                <p class="meta">Verfasse Beiträge, hilf anderen und diskutiere mit der Community.</p>
+                <p class="meta" id="userInfo">Lade...</p>
+                <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Du bist eingeloggt als Administrator</p>
+            </div>
+            <div class="button-group">
+                <button id="themeToggle" class="button secondary theme-toggle">🌙 Dark Mode</button>
+                <a href="settings.html" class="button-link secondary icon-button" aria-label="Profil" title="Profil">👤</a>
+                <button id="logoutButton" class="button secondary icon-button" aria-label="Abmelden" title="Abmelden">🚪</button>
+        <div class="card">
+            <div class="panel">
+                <aside class="sidebar">
+                    <h2>Bereiche</h2>
+                    <div class="nav-list">
+                        <button class="tab-button active" data-tab="posts">Beiträge</button>
+                        <button class="tab-button" data-tab="my-posts">Meine Beiträge</button>
+                        <button class="tab-button" data-tab="new-post">Neuer Beitrag</button>
+                    </div>
+                </aside>
+
+                <main class="panel-main">
+                    <section id="posts" class="section active">
+                        <div class="notice">Nur angemeldete Benutzer sehen dieses Forum aktuell das es in der Beta Phase ist.</div>
+                        <div id="postList" class="post-list"></div>
+                    </section>
+
+                    <section id="my-posts" class="section">
+                        <div class="notice">Hier findest du alle Beiträge, die du selbst erstellt hast.</div>
+                        <div id="myPostList" class="post-list"></div>
+                    </section>
+
+                    <section id="new-post" class="section">
+                        <div class="notice">Erstelle einen Beitrag für das Forum. Dein Name wird automatisch angezeigt.</div>
+                        <form id="postForm" class="post-form">
+                            <div class="input-group">
+                                <label for="postTitle">Titel</label>
+                                <input type="text" id="postTitle" placeholder="Worum geht es?" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="postContent">Nachricht</label>
+                                <textarea id="postContent" placeholder="Teile hier deine Gedanken..." required></textarea>
+                            </div>
+                            <button type="submit" class="button">Beitrag erstellen</button>
+                            <div id="postMessage" class="message"></div>
+                        </form>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        const STORAGE_KEY = 'forum_posts_local';
+        const THEME_KEY = 'themePreference';
+        const tableName = 'forum_posts';
+        const ADMIN_USERS = ['admin@jungheim.site'];
+        let client = null;
+        let currentUser = null;
+        let allPosts = [];
+        let isAdmin = false;
+
+        function setTheme(theme) {
+            document.body.classList.toggle('dark', theme === 'dark');
+            const toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                toggle.textContent = theme === 'dark' ? '☀️ White Mode' : '🌙 Dark Mode';
+            }
+            localStorage.setItem(THEME_KEY, theme);
+        }
+
+        function initTheme() {
+            const stored = localStorage.getItem(THEME_KEY);
+            const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(theme);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('postMessage');
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+        }
+
+        function clearMessage() {
+            const message = document.getElementById('postMessage');
+            message.textContent = '';
+            message.style.display = 'none';
+        }
+
+        function renderPosts(posts, elementId) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!posts.length) {
+                container.innerHTML = '<div class="empty-state">Keine Beiträge gefunden. Erstelle einen neuen Beitrag über den Bereich „Neuer Beitrag“.</div>';
+                return;
+            }
+
+            for (const post of posts) {
+                const card = document.createElement('article');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p class="post-meta">${post.author_name || post.author_email || 'Unbekannt'} · ${formatDate(post.created_at || post.createdAt)}</p>
+                    <p>${post.content.replace(/\n/g, '<br>')}</p>
+                `;
+                if (isAdmin || post.author_email === currentUser.email) {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'button secondary delete-button';
+                    deleteButton.textContent = 'Löschen';
+                    deleteButton.style.marginTop = '1rem';
+                    deleteButton.addEventListener('click', () => deletePost(post.id));
+                    card.appendChild(deleteButton);
+                }
+                container.appendChild(card);
+            }
+        }
+
+        function saveLocalPosts(posts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        function loadLocalPosts() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (!saved) return [];
+                const posts = JSON.parse(saved);
+                let changed = false;
+                const normalized = posts.map(post => {
+                    if (!post.id) {
+                        post.id = crypto.randomUUID ? crypto.randomUUID() : 'post-' + Date.now() + '-' + Math.floor(Math.random() * 1000000);
+                        changed = true;
+                    }
+                    return post;
+                });
+                if (changed) {
+                    saveLocalPosts(normalized);
+                }
+                return normalized;
+            } catch {
+                return [];
+            }
+        }
+
+        async function loadPosts() {
+            const localPosts = loadLocalPosts();
+            let fetchedPosts = [];
+            let usingSupabase = false;
+
+            try {
+                const { data, error } = await client.from(tableName).select('id,title,content,created_at,author_name,author_email').order('created_at', { ascending: false }).limit(50);
+                if (!error && data) {
+                    fetchedPosts = data.map(post => ({
+                        id: post.id,
+                        title: post.title,
+                        content: post.content,
+                        created_at: post.created_at,
+                        author_name: post.author_name,
+                        author_email: post.author_email,
+                    }));
+                    usingSupabase = true;
+                }
+            } catch (err) {
+                console.warn('Supabase fetch failed', err);
+            }
+
+            allPosts = usingSupabase ? fetchedPosts : localPosts;
+            const myPosts = allPosts.filter(post => post.author_email === currentUser.email);
+            renderPosts(allPosts, 'postList');
+            renderPosts(myPosts, 'myPostList');
+        }
+
+        async function postNewEntry(event) {
+            event.preventDefault();
+            clearMessage();
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            if (!title || !content) {
+                showMessage('Bitte Titel und Nachricht eingeben.', 'error');
+                return;
+            }
+
+            const newPost = {
+                id: crypto.randomUUID ? crypto.randomUUID() : 'post-' + Date.now(),
+                title,
+                content,
+                author_name: currentUser.user_metadata?.full_name || currentUser.email,
+                author_email: currentUser.email,
+                createdAt: new Date().toISOString(),
+            };
+
+            try {
+                const { data, error } = await client.from(tableName).insert([{ title, content, author_name: newPost.author_name, author_email: newPost.author_email }]);
+                if (!error && data) {
+                    newPost.id = data[0].id || newPost.id;
+                    newPost.created_at = data[0].created_at || newPost.createdAt;
+                    allPosts.unshift(newPost);
+                    saveLocalPosts(allPosts);
+                    renderPosts(allPosts, 'postList');
+                    renderPosts(allPosts.filter(post => post.author_email === currentUser.email), 'myPostList');
+                    document.getElementById('postForm').reset();
+                    showMessage('Beitrag veröffentlicht!', 'success');
+                    return;
+                }
+                throw error || new Error('Unbekannter Fehler');
+            } catch (err) {
+                const localPosts = loadLocalPosts();
+                localPosts.unshift(newPost);
+                saveLocalPosts(localPosts);
+                allPosts = localPosts;
+                renderPosts(allPosts, 'postList');
+                renderPosts(allPosts.filter(post => post.author_email === currentUser.email), 'myPostList');
+                document.getElementById('postForm').reset();
+                showMessage('Beitrag lokal gespeichert. Supabase-Datenbank möglich nicht verfügbar.', 'success');
+            }
+        }
+
+        async function deletePost(postId) {
+            const postIndex = allPosts.findIndex(post => post.id === postId);
+            if (postIndex === -1) return;
+            const post = allPosts[postIndex];
+            if (!isAdmin && post.author_email !== currentUser.email) {
+                showMessage('Du darfst diesen Beitrag nicht löschen.', 'error');
+                return;
+            }
+
+            try {
+                if (typeof supabase !== 'undefined') {
+                    const { error } = await client.from(tableName).delete().eq('id', postId);
+                    if (error) throw error;
+                }
+            } catch (err) {
+                console.warn('Supabase delete failed', err);
+            }
+
+            allPosts.splice(postIndex, 1);
+            saveLocalPosts(allPosts);
+            renderPosts(allPosts, 'postList');
+            renderPosts(allPosts.filter(p => p.author_email === currentUser.email), 'myPostList');
+            showMessage('Beitrag gelöscht.', 'success');
+        }
+
+        function switchTab(event) {
+            const selected = event.currentTarget.dataset.tab;
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === selected));
+            document.querySelectorAll('.section').forEach(section => section.classList.toggle('active', section.id === selected));
+        }
+
+        async function init() {
+            initTheme();
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+                });
+            }
+
+            if (typeof supabase === 'undefined') {
+                document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;">Supabase konnte nicht geladen werden.</div>';
+                return;
+            }
+            client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const { data, error } = await client.auth.getUser();
+            if (error || !data?.user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            currentUser = data.user;
+            isAdmin = ADMIN_USERS.includes(currentUser.email);
+            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (currentUser.email || 'Unbekannt');
+            const adminInfo = document.getElementById('adminInfo');
+            if (adminInfo) {
+                adminInfo.style.display = isAdmin ? 'block' : 'none';
+            }
+            document.getElementById('logoutButton').addEventListener('click', async () => {
+                await client.auth.signOut();
+                window.location.href = 'login.html';
+            });
+            document.getElementById('postForm').addEventListener('submit', postNewEntry);
+            document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', switchTab));
+            await loadPosts();
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
