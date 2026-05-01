@@ -28,8 +28,8 @@
             z-index: -1;
             background-color: #f8fafc;
             background-image:
-                linear-gradient(to bottom, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 42%),
-                linear-gradient(to top, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 18%),
+                radial-gradient(ellipse 800px 200px at center top, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 40%),
+                radial-gradient(ellipse 800px 150px at center bottom, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 35%),
                 url('riesenrad.jpg');
             background-size: cover, cover, contain;
             background-position: top center, bottom center, center center;
@@ -39,8 +39,8 @@
         body.dark .background-panel {
             background-color: #050912;
             background-image:
-                linear-gradient(to bottom, rgba(5,9,23,1) 0%, rgba(5,9,23,0) 42%),
-                linear-gradient(to top, rgba(5,9,23,1) 0%, rgba(5,9,23,0) 18%),
+                radial-gradient(ellipse 800px 200px at center top, rgba(5,9,23,1) 0%, rgba(5,9,23,0) 40%),
+                radial-gradient(ellipse 800px 150px at center bottom, rgba(5,9,23,1) 0%, rgba(5,9,23,0) 35%),
                 url('riesenrad.jpg');
             background-size: cover, cover, contain;
             background-position: top center, bottom center, center center;
@@ -276,7 +276,8 @@
             text-decoration: none;
         }
         .sidebar-divider {
-            margin: 1.75rem 0 1rem;
+            margin-top: auto;
+            margin-bottom: 1rem;
             border-top: 1px solid rgba(148,163,184,0.35);
         }
         body.dark .sidebar-divider {
