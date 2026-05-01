@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Einloggen | Dein Projekt</title>
+    <title>Log In | </title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -130,7 +130,7 @@
             <div id="message"></div>
 
             <div class="footer-text">
-                <a href="password-reset.html">Passwort vergessen?</a>
+                <a href="password-reset.html">Passwort vergessen? (not working)</a>
             </div>
             <div class="footer-text">
                 Noch kein Konto? <a href="register.html">Hier registrieren</a>
@@ -203,7 +203,7 @@
                 });
 
                 if (error) {
-                    msgDiv.innerText = 'Fehler: ' + error.message;
+                    msgDiv.innerText = 'Error: ' + error.message;
                     msgDiv.className = 'error';
                     return;
                 }
