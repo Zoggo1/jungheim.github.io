@@ -13,15 +13,32 @@
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            background: radial-gradient(circle at top, #eef2ff 0%, #dbeafe 35%, #c7d2fe 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             padding: 2rem;
             color: #111827;
+            position: relative;
+            overflow-x: hidden;
+            background: #f8fafc;
+        }
+        .background-panel {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(250,250,255,0.82), rgba(245,246,255,0.88)),
+                url('riesenrad.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: saturate(1.02) contrast(0.9);
+        }
+        body.dark .background-panel {
+            background-image:
+                linear-gradient(rgba(5,9,23,0.72), rgba(12,18,35,0.78)),
+                url('riesenrad.jpg');
         }
         body.dark {
-            background: radial-gradient(circle at top, #020617 0%, #111827 35%, #0b1220 100%);
             color: #e2e8f0;
         }
         .layout {
@@ -33,21 +50,109 @@
             align-items: center;
             gap: 1rem;
             margin-bottom: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.80);
+            border: 1px solid rgba(148,163,184,0.24);
+            box-shadow: 0 16px 40px rgba(15,23,42,0.10);
+            backdrop-filter: blur(20px);
         }
-        .topbar h1 {
-            margin: 0;
-            font-size: clamp(1.75rem, 2.5vw, 2.5rem);
-            color: #111827;
+        body.dark .topbar {
+            background: rgba(15,23,42,0.78);
+            border-color: rgba(148,163,184,0.20);
+        }
+        .topbar-left {
+            display: grid;
+            gap: 0.35rem;
+        }
+        .topbar-left .brand-strip {
+            text-transform: uppercase;
+            letter-spacing: 0.22em;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        body.dark .topbar-left .brand-strip {
+            color: #93c5fd;
         }
         .topbar .meta {
             color: #475569;
             font-size: 0.95rem;
-        }
-        body.dark .topbar h1 {
-            color: #f8fafc;
+            line-height: 1.7;
+            margin: 0;
         }
         body.dark .topbar .meta {
             color: #cbd5e1;
+        }
+        .notice {
+            text-align: center;
+        }
+        .topbar .meta {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+        body.dark .topbar .meta {
+            color: #cbd5e1;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .button.icon-button,
+        .button-link.icon-button {
+            width: 3.8rem;
+            min-width: 3.8rem;
+            height: 3.8rem;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            border-radius: 999px;
+            background: #f8fafc;
+            color: #111827;
+            border: 1px solid rgba(148,163,184,0.14);
+        }
+        body.dark .button.icon-button,
+        body.dark .button-link.icon-button {
+            background: #111827;
+            color: #f8fafc;
+            border-color: rgba(148,163,184,0.18);
+        }
+        .logout-button {
+            border-radius: 999px;
+            min-width: auto;
+            width: auto;
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            background: #f8fafc;
+            color: #111827;
+            border: 1px solid rgba(148,163,184,0.14);
+        }
+        body.dark .logout-button {
+            background: #111827;
+            color: #f8fafc;
+            border-color: rgba(148,163,184,0.18);
+        }
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 999px;
+            padding: 0.85rem 1.1rem;
+            min-width: auto;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            color: #111827;
+            border: 1px solid rgba(15,23,42,0.10);
+        }
+        body.dark .theme-toggle {
+            background: #111827;
+            color: #f8fafc;
+            border-color: rgba(148,163,184,0.18);
         }
         .card {
             background: rgba(255,255,255,0.94);
@@ -154,21 +259,33 @@
             color: white;
             text-decoration: none;
         }
+        .sidebar-divider {
+            margin: 1.75rem 0 1rem;
+            border-top: 1px solid rgba(148,163,184,0.35);
+        }
+        body.dark .sidebar-divider {
+            border-top-color: rgba(148,163,184,0.18);
+        }
+        .sidebar-profile {
+            display: inline-flex;
+            width: 100%;
+            justify-content: center;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
+            font-weight: 700;
+            background: #0f172a;
+            color: #ffffff;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.12);
+        }
+        body.dark .sidebar-profile {
+            background: #111827;
+            color: #e2e8f0;
+            border-color: rgba(255,255,255,0.08);
+        }
         .button.secondary,
         .button-link.secondary {
             background: #0f172a;
-        }
-        .theme-toggle {
-            border-radius: 999px;
-            padding: 0.75rem 1rem;
-            min-width: 3.5rem;
-            font-size: 0.9rem;
-            background: #e2e8f0;
-            color: #0f172a;
-            border: 1px solid rgba(15,23,42,0.08);
-        }
-        .theme-toggle:hover {
-            filter: brightness(0.95);
         }
         .button:hover,
         .button-link:hover {
@@ -286,21 +403,20 @@
     </style>
 </head>
 <body>
+    <div class="background-panel"></div>
     <div class="layout">
         <div class="topbar">
-            <div>
-                <h1>Forum Heimatfest Schwelm</h1>
-                <p class="meta">Verfasse Beiträge, hilf anderen oderdiskutiere mit anderen</p>
+            <div class="topbar-left">
+                <div class="brand-strip">Forum Heimatfest Schwelm</div>
+                <p class="meta">Verfasse Beiträge, hilf anderen und diskutiere mit der Community.</p>
                 <p class="meta" id="userInfo">Lade...</p>
-            <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Du bist eingelogt als Administrator</p>
+                <p class="meta" id="adminInfo" style="display:none; font-weight:700;">Du bist eingeloggt als Administrator</p>
             </div>
-            <div class="button-group">
-                <button id="themeToggle" class="button secondary theme-toggle">Dark Mode</button>
-                <a href="settings.html" class="button-link secondary">Profil</a>
-                <button id="logoutButton" class="button secondary">Abmelden</button>
+            <div class="topbar-right">
+                <button id="themeToggle" class="button secondary theme-toggle" aria-label="Theme wechseln"><span class="mode-icon">🌙</span><span class="mode-label">Dark Mode</span></button>
+                <button id="logoutButton" class="button secondary logout-button" aria-label="Abmelden" title="Abmelden">🚪 Abmelden</button>
             </div>
         </div>
-
         <div class="card">
             <div class="panel">
                 <aside class="sidebar">
@@ -310,6 +426,8 @@
                         <button class="tab-button" data-tab="my-posts">Meine Beiträge</button>
                         <button class="tab-button" data-tab="new-post">Neuer Beitrag</button>
                     </div>
+                    <div class="sidebar-divider"></div>
+                    <a href="settings.html" class="button-link secondary sidebar-profile">Profil</a>
                 </aside>
 
                 <main class="panel-main">
@@ -359,7 +477,7 @@
             document.body.classList.toggle('dark', theme === 'dark');
             const toggle = document.getElementById('themeToggle');
             if (toggle) {
-                toggle.textContent = theme === 'dark' ? 'White Mode' : 'Dark Mode';
+                toggle.textContent = theme === 'dark' ? '☀️ White Mode' : '🌙 Dark Mode';
             }
             localStorage.setItem(THEME_KEY, theme);
         }
@@ -570,7 +688,8 @@
             }
             currentUser = data.user;
             isAdmin = ADMIN_USERS.includes(currentUser.email);
-            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (currentUser.email || 'Unbekannt');
+            const accountName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || currentUser.email || 'Unbekannt';
+            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + accountName;
             const adminInfo = document.getElementById('adminInfo');
             if (adminInfo) {
                 adminInfo.style.display = isAdmin ? 'block' : 'none';
