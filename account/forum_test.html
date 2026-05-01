@@ -180,6 +180,8 @@
             min-height: 620px;
         }
         .sidebar {
+            display: flex;
+            flex-direction: column;
             padding: 2rem;
             border-right: 1px solid #e2e8f0;
             background: #f8fafc;
@@ -285,6 +287,7 @@
             color: #ffffff;
             text-decoration: none;
             border: 1px solid rgba(255,255,255,0.12);
+            margin-top: auto;
         }
         body.dark .sidebar-profile {
             background: #111827;
@@ -298,6 +301,73 @@
         .button:hover,
         .button-link:hover {
             filter: brightness(1.05);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .post-detail {
+            display: grid;
+            gap: 1rem;
+            max-width: 100%;
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background: transparent;
+            color: #2563eb;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+        }
+        .back-button:hover {
+            opacity: 0.85;
+        }
+        .detail-card {
+            background: rgba(248,250,252,0.95);
+            border: 1px solid rgba(148,163,184,0.25);
+            border-radius: 24px;
+            padding: 1.5rem;
+        }
+        body.dark .detail-card {
+            background: rgba(15,23,42,0.95);
+            border-color: rgba(148,163,184,0.12);
+        }
+        .comment-panel {
+            display: grid;
+            gap: 1rem;
+        }
+        .comment-list {
+            display: grid;
+            gap: 0.85rem;
+        }
+        .comment-card {
+            padding: 1rem 1.1rem;
+            border-radius: 18px;
+            background: #f8fafc;
+            border: 1px solid rgba(148,163,184,0.3);
+            color: #111827;
+        }
+        body.dark .comment-card {
+            background: rgba(30,41,59,0.95);
+            border-color: rgba(148,163,184,0.18);
+            color: #e2e8f0;
+        }
+        .comment-meta {
+            margin: 0 0 0.5rem;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+        body.dark .comment-meta {
+            color: #94a3b8;
+        }
+        .comment-form {
+            display: grid;
+            gap: 0.75rem;
+        }
+        .comment-form textarea {
+            min-height: 120px;
         }
         .section {
             display: none;
@@ -464,6 +534,24 @@
                             <div id="postMessage" class="message"></div>
                         </form>
                     </section>
+                    <section id="post-detail" class="section">
+                        <div id="postDetail" class="post-detail">
+                            <button id="backToPosts" class="back-button" type="button">← Zurück zu Beiträgen</button>
+                            <article class="post-card detail-card">
+                                <h3 id="detailTitle"></h3>
+                                <p class="post-meta" id="detailMeta"></p>
+                                <div id="detailContent"></div>
+                            </article>
+                            <div class="comment-panel">
+                                <div id="commentList" class="comment-list"></div>
+                                <form id="commentForm" class="comment-form">
+                                    <label for="commentText">Kommentar</label>
+                                    <textarea id="commentText" placeholder="Schreibe einen Kommentar..." required></textarea>
+                                    <button type="submit" class="button">Kommentar posten</button>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
                 </main>
             </div>
         </div>
@@ -480,6 +568,8 @@
         let currentUser = null;
         let allPosts = [];
         let isAdmin = false;
+        let currentPostId = null;
+        let commentsData = {};
 
         function setTheme(theme) {
             document.body.classList.toggle('dark', theme === 'dark');
@@ -536,11 +626,15 @@
                     const deleteButton = document.createElement('button');
                     deleteButton.type = 'button';
                     deleteButton.className = 'button secondary delete-button';
-                    deleteButton.textContent = 'Löschen';
+                    deleteButton.textContent = '🗑️ Löschen';
                     deleteButton.style.marginTop = '1rem';
-                    deleteButton.addEventListener('click', () => deletePost(post.id));
+                    deleteButton.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        deletePost(post.id);
+                    });
                     card.appendChild(deleteButton);
                 }
+                card.addEventListener('click', () => openPostDetail(post.id));
                 container.appendChild(card);
             }
         }
@@ -569,6 +663,93 @@
             } catch {
                 return [];
             }
+        }
+
+        const COMMENT_KEY = 'forum_comments_local';
+        let currentPostId = null;
+        let commentsData = {};
+
+        function loadCommentsData() {
+            try {
+                return JSON.parse(localStorage.getItem(COMMENT_KEY)) || {};
+            } catch {
+                return {};
+            }
+        }
+
+        function saveCommentsData() {
+            localStorage.setItem(COMMENT_KEY, JSON.stringify(commentsData));
+        }
+
+        function getComments(postId) {
+            return commentsData[postId] || [];
+        }
+
+        function renderComments(postId) {
+            const container = document.getElementById('commentList');
+            if (!container) return;
+            const comments = getComments(postId);
+            container.innerHTML = '';
+            if (!comments.length) {
+                container.innerHTML = '<div class="empty-state">Noch keine Kommentare. Schreibe den ersten Kommentar!</div>';
+                return;
+            }
+            for (const comment of comments) {
+                const commentCard = document.createElement('div');
+                commentCard.className = 'comment-card';
+                commentCard.innerHTML = `
+                    <p class="comment-meta">${comment.author_name || 'Unbekannt'} · ${formatDate(comment.createdAt)}</p>
+                    <p>${comment.text.replace(/\n/g, '<br>')}</p>
+                `;
+                container.appendChild(commentCard);
+            }
+        }
+
+        function setActiveSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.toggle('active', section.id === sectionId);
+            });
+        }
+
+        function openPostDetail(postId) {
+            currentPostId = postId;
+            const post = allPosts.find(item => item.id === postId);
+            if (!post) return;
+            setActiveSection('post-detail');
+            document.getElementById('detailTitle').textContent = post.title;
+            document.getElementById('detailMeta').textContent = `${post.author_name || post.author_email || 'Unbekannt'} · ${formatDate(post.created_at || post.createdAt)}`;
+            document.getElementById('detailContent').innerHTML = `<p>${post.content.replace(/\n/g, '<br>')}</p>`;
+            renderComments(postId);
+            document.getElementById('commentForm').reset();
+        }
+
+        function closePostDetail() {
+            currentPostId = null;
+            const activeTab = document.querySelector('.tab-button.active')?.dataset.tab || 'posts';
+            setActiveSection(activeTab);
+            document.getElementById('commentForm').reset();
+        }
+
+        function addComment(event) {
+            event.preventDefault();
+            if (!currentPostId) return;
+            const text = document.getElementById('commentText').value.trim();
+            if (!text) return;
+
+            const comment = {
+                id: crypto.randomUUID ? crypto.randomUUID() : 'comment-' + Date.now(),
+                author_name: currentUser.user_metadata?.full_name || currentUser.email || 'Unbekannt',
+                createdAt: new Date().toISOString(),
+                text,
+            };
+
+            if (!commentsData[currentPostId]) {
+                commentsData[currentPostId] = [];
+            }
+            commentsData[currentPostId].push(comment);
+            saveCommentsData();
+            renderComments(currentPostId);
+            document.getElementById('commentForm').reset();
         }
 
         async function loadPosts() {
@@ -677,11 +858,31 @@
 
         async function init() {
             initTheme();
+            commentsData = loadCommentsData();
             const themeToggle = document.getElementById('themeToggle');
             if (themeToggle) {
                 themeToggle.addEventListener('click', () => {
                     setTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
                 });
+            }
+
+            const postDetailSection = document.getElementById('post-detail');
+            if (postDetailSection) {
+                postDetailSection.addEventListener('click', event => {
+                    if (event.target.id === 'post-detail') {
+                        closePostDetail();
+                    }
+                });
+            }
+
+            const backToPosts = document.getElementById('backToPosts');
+            if (backToPosts) {
+                backToPosts.addEventListener('click', closePostDetail);
+            }
+
+            const commentForm = document.getElementById('commentForm');
+            if (commentForm) {
+                commentForm.addEventListener('submit', addComment);
             }
 
             if (typeof supabase === 'undefined') {
