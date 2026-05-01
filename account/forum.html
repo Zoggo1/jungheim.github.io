@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum | Dein Projekt</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #c3dafe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .forum-card {
+            background: white;
+            border-radius: 24px;
+            width: min(900px, 100%);
+            box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+        }
+
+        .forum-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .forum-header h2 { margin: 0; font-size: 2rem; color: #1f2937; }
+        .forum-header p { margin: 0; color: #4b5563; }
+        .button-group { display: flex; gap: 0.75rem; }
+        .button-group button, .button-group a {
+            border: none;
+            border-radius: 12px;
+            padding: 0.9rem 1.25rem;
+            cursor: pointer;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .button-group button:hover, .button-group a:hover { background: #5a67d8; }
+        .button-secondary { background: #1f2937; }
+        .button-secondary:hover { background: #111827; }
+
+        .forum-body { padding: 2rem; }
+        .notice { margin-bottom: 1.5rem; padding: 1.25rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 16px; color: #1e3a8a; }
+        .post { border-bottom: 1px solid #e5e7eb; padding: 1.5rem 0; }
+        .post:last-child { border-bottom: none; }
+        .post-title { margin: 0 0 0.5rem; font-size: 1.1rem; color: #111827; }
+        .post-meta { margin: 0 0 0.75rem; color: #6b7280; font-size: 0.9rem; }
+        .post-text { margin: 0; color: #374151; line-height: 1.75; }
+    </style>
+</head>
+<body>
+    <div class="forum-card">
+        <div class="forum-header">
+            <div>
+                <h2>Forum</h2>
+                <p>Nur angemeldete Benutzer dürfen dieses Forum sehen.</p>
+                <p id="userInfo" style="margin-top:0.5rem;color:#4b5563;font-size:0.95rem;">Lade...</p>
+            </div>
+            <div class="button-group">
+                <a href="settings.html" class="button-secondary">Profil</a>
+                <button id="logoutButton">Abmelden</button>
+            </div>
+        </div>
+
+        <div class="forum-body">
+            <div class="notice">Willkommen! Du siehst dieses Forum, weil du eingeloggt bist. Teile hier Ideen, Fragen oder Feedback.</div>
+
+            <div class="post">
+                <h3 class="post-title">Begrüßung</h3>
+                <p class="post-meta">von Admin | heute</p>
+                <p class="post-text">Dieses Forum ist nur für angemeldete Mitglieder sichtbar. Du kannst dich abmelden oder oben auf Profil klicken, um deine Daten zu ändern.</p>
+            </div>
+            <div class="post">
+                <h3 class="post-title">Technik und Events</h3>
+                <p class="post-meta">von Moderator | gestern</p>
+                <p class="post-text">Hier sprechen wir über Licht, Ton und Technik bei Schulveranstaltungen. Wenn du Teil des Teams bist, melde dich an und bleibe auf dem Laufenden.</p>
+            </div>
+            <div class="post">
+                <h3 class="post-title">Website und Projekte</h3>
+                <p class="post-meta">von Community | vor 2 Tagen</p>
+                <p class="post-text">Das Forum ist auch ein Ort, um neue Webprojekte, Ideen und Fragen zu teilen. Wenn du mehr willst, klicke auf Profil und bearbeite deine Kontoinfos.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        let client = null;
+
+        async function init() {
+            if (typeof supabase === 'undefined') {
+                document.body.innerHTML = '<div style="padding:2rem;font-family:sans-serif;">Supabase konnte nicht geladen werden.</div>';
+                return;
+            }
+            client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            const { data, error } = await client.auth.getUser();
+            if (error || !data?.user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = data.user;
+            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (user.email || 'Unbekannt');
+            document.getElementById('logoutButton').addEventListener('click', async () => {
+                await client.auth.signOut();
+                window.location.href = 'login.html';
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
