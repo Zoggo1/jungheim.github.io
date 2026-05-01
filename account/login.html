@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Einloggen | Dein Projekt</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0;
@@ -26,18 +27,117 @@
         }
 
         h2 { color: #2d3748; margin-bottom: 0.5rem; font-weight: 700; }
-        p { color: #718096; margin-bottom: 2rem; font-size: 0.95rem; }
-        a { color: #667eea; text-decoration: none; font-weight: 600; }
+        p { color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .input-group { margin-bottom: 1rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: #4a5568; font-weight: 600; }
+        input { width: 100%; padding: 12px 16px; border: 2px solid #edf2f7; border-radius: 10px; box-sizing: border-box; font-size: 1rem; transition: all 0.3s ease; }
+        input:focus { border-color: #667eea; outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            margin-top: 1rem;
+        }
+        button:hover { background: #5a67d8; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+
+        #message { margin-top: 1.5rem; font-size: 0.9rem; padding: 12px; border-radius: 8px; display: none; }
+        .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; display: block !important; }
+        .success { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; display: block !important; }
+
         .footer-text { margin-top: 1.5rem; font-size: 0.85rem; color: #718096; }
+        .footer-text a { color: #667eea; text-decoration: none; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="login-card">
         <h2>Einloggen</h2>
-        <p>Diese Seite ist noch in Arbeit. Verwende die Registrierungsseite oder kehre zurück.</p>
+        <p>Melde dich mit deiner E-Mail und deinem Passwort an.</p>
+
+        <div class="input-group">
+            <label for="email">E-Mail</label>
+            <input type="email" id="email" placeholder="beispiel@mail.de">
+        </div>
+        <div class="input-group">
+            <label for="password">Passwort</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+
+        <button type="button" onclick="handleLogin()">Einloggen</button>
+
+        <div id="message"></div>
+
         <div class="footer-text">
             Noch kein Konto? <a href="register.html">Hier registrieren</a>
         </div>
     </div>
+
+    <script>
+        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        let client = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof supabase !== 'undefined') {
+                client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+        });
+
+        async function handleLogin() {
+            const msgDiv = document.getElementById('message');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            msgDiv.style.display = 'block';
+            msgDiv.className = '';
+            msgDiv.innerText = 'Prüfe Zugangsdaten...';
+
+            if (!email || !password) {
+                msgDiv.innerText = 'Bitte gib E-Mail und Passwort ein.';
+                msgDiv.className = 'error';
+                return;
+            }
+
+            if (!client) {
+                msgDiv.innerText = 'Fehler: Supabase konnte nicht geladen werden. Bitte Seite neu laden.';
+                msgDiv.className = 'error';
+                return;
+            }
+
+            try {
+                const { data, error } = await client.auth.signInWithPassword({
+                    email,
+                    password,
+                });
+
+                if (error) {
+                    msgDiv.innerText = 'Fehler: ' + error.message;
+                    msgDiv.className = 'error';
+                    return;
+                }
+
+                if (data.user) {
+                    msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung...';
+                    msgDiv.className = 'success';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    msgDiv.innerText = 'Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten.';
+                    msgDiv.className = 'error';
+                }
+            } catch (err) {
+                msgDiv.innerText = 'Kritischer Fehler: ' + err.message;
+                msgDiv.className = 'error';
+            }
+        }
+    </script>
 </body>
 </html>
