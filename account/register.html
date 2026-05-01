@@ -1,46 +1,136 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Bereich</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* Hier ist das moderne Design (CSS) direkt drin */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Hellgrauer Hintergrund wie bei modernen Apps */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        h2 { color: #1a1a1a; margin-bottom: 0.5rem; }
+        p { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        #message {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            padding: 10px;
+            border-radius: 6px;
+            display: none; /* Erst anzeigen, wenn Nachricht kommt */
+        }
+
+        .error { background: #fee2e2; color: #dc2626; display: block !important; }
+        .success { background: #dcfce7; color: #16a34a; display: block !important; }
+    </style>
+</head>
 <body>
 
-<div class="form-container">
-    <h2>Konto erstellen</h2>
-    <input type="email" id="reg-email" placeholder="Deine E-Mail">
-    <input type="password" id="reg-password" placeholder="Passwort wählen">
-    <button onclick="signUp()">lofin</button>
-    <div id="message" class="msg"></div>
+<div class="login-card">
+    <h2>Willkommen</h2>
+    <p>Bitte gib deine Daten ein</p>
+    
+    <div class="input-group">
+        <input type="email" id="email" placeholder="E-Mail Adresse">
+    </div>
+    <div class="input-group">
+        <input type="password" id="password" placeholder="Passwort">
+    </div>
+    
+    <button onclick="handleLogin()">Einloggen</button>
+    
+    <div id="message"></div>
 </div>
 
 <script>
-    async function signUp() {
-        const email = document.getElementById('reg-email').value;
-        const password = document.getElementById('reg-password').value;
-        const messageDiv = document.getElementById('message');
+    // 1. Verbindung zu Supabase (Ersetze die Werte mit deinen aus der config.js)
+    const SUPABASE_URL = 'DEINE_SUPABASE_URL_HIER';
+    const SUPABASE_KEY = 'DEIN_SUPABASE_KEY_HIER';
+    
+    // Hier wird der Client erstellt
+    const supabase = lib.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        messageDiv.innerText = "Sende Daten an Supabase...";
+    async function handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const msgDiv = document.getElementById('message');
 
-        try {
-            // Test, ob Supabase überhaupt geladen wurde
-            if (typeof supabase === 'undefined') {
-                alert("FEHLER: Supabase ist nicht definiert! Prüfe, ob deine config.js richtig geladen wird.");
-                return;
-            }
+        msgDiv.className = ''; 
+        msgDiv.innerText = 'Wird geprüft...';
 
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+        });
 
-            if (error) {
-                // Das zeigt uns den genauen Fehlergrund von Supabase
-                alert("Supabase Fehler: " + error.message);
-                messageDiv.innerText = "Fehler: " + error.message;
-            } else {
-                alert("ERFOLG! Der User wurde angelegt. Check jetzt deine E-Mails.");
-                messageDiv.innerText = "Bestätigungs-Mail wurde versendet!";
-            }
-        } catch (err) {
-            alert("System-Fehler: " + err.message);
-            messageDiv.innerText = "Ein Fehler ist aufgetreten.";
+        if (error) {
+            msgDiv.innerText = "Fehler: " + error.message;
+            msgDiv.classList.add('error');
+        } else {
+            msgDiv.innerText = "Login erfolgreich! Leite weiter...";
+            msgDiv.classList.add('success');
+            // Hier Weiterleitung einfügen, z.B.:
+            // window.location.href = 'dashboard.html';
         }
     }
 </script>
 
 </body>
+</html>
