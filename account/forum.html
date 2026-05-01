@@ -6,90 +6,256 @@
     <title>Forum | Dein Projekt</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        :root {
+            color-scheme: light;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #eef2ff 0%, #c3dafe 100%);
+            background: radial-gradient(circle at top, #eef2ff 0%, #dbeafe 35%, #c7d2fe 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             padding: 2rem;
         }
-
-        .forum-card {
-            background: white;
-            border-radius: 24px;
-            width: min(900px, 100%);
-            box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
-            overflow: hidden;
+        .layout {
+            width: min(1100px, 100%);
         }
-
-        .forum-header {
-            padding: 2rem;
-            border-bottom: 1px solid #e2e8f0;
+        .topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
+            margin-bottom: 1.5rem;
         }
-
-        .forum-header h2 { margin: 0; font-size: 2rem; color: #1f2937; }
-        .forum-header p { margin: 0; color: #4b5563; }
-        .button-group { display: flex; gap: 0.75rem; }
-        .button-group button, .button-group a {
+        .topbar h1 {
+            margin: 0;
+            font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+            color: #111827;
+        }
+        .topbar .meta {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.94);
+            border-radius: 32px;
+            box-shadow: 0 35px 90px rgba(15,23,42,0.12);
+            overflow: hidden;
+            border: 1px solid rgba(148,163,184,0.25);
+        }
+        .panel {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 620px;
+        }
+        .sidebar {
+            padding: 2rem;
+            border-right: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #0f172a;
+            font-size: 1.15rem;
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 0.5rem;
+        }
+        .nav-list button {
+            width: 100%;
+            text-align: left;
             border: none;
-            border-radius: 12px;
-            padding: 0.9rem 1.25rem;
+            background: transparent;
+            color: #334155;
+            padding: 0.95rem 1rem;
+            border-radius: 16px;
             cursor: pointer;
-            background: #667eea;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-list button.active,
+        .nav-list button:hover {
+            background: #e0e7ff;
+            color: #1e3a8a;
+        }
+        .panel-main {
+            padding: 2rem;
+        }
+        .panel-main h2 {
+            margin-top: 0;
+            color: #0f172a;
+            font-size: 1.5rem;
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .toolbar .button-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .button,
+        .button-link {
+            border: none;
+            border-radius: 14px;
+            padding: 0.9rem 1.3rem;
+            cursor: pointer;
+            font-weight: 700;
+            background: #4338ca;
             color: white;
             text-decoration: none;
+        }
+        .button.secondary,
+        .button-link.secondary {
+            background: #0f172a;
+        }
+        .button:hover,
+        .button-link:hover {
+            filter: brightness(1.05);
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .notice {
+            padding: 1.25rem 1.5rem;
+            border-radius: 18px;
+            background: #eff6ff;
+            border: 1px solid #c7d2fe;
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+        }
+        .post-form {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+        .input-group label {
+            font-size: 0.95rem;
+            color: #334155;
             font-weight: 600;
         }
-        .button-group button:hover, .button-group a:hover { background: #5a67d8; }
-        .button-secondary { background: #1f2937; }
-        .button-secondary:hover { background: #111827; }
-
-        .forum-body { padding: 2rem; }
-        .notice { margin-bottom: 1.5rem; padding: 1.25rem; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 16px; color: #1e3a8a; }
-        .post { border-bottom: 1px solid #e5e7eb; padding: 1.5rem 0; }
-        .post:last-child { border-bottom: none; }
-        .post-title { margin: 0 0 0.5rem; font-size: 1.1rem; color: #111827; }
-        .post-meta { margin: 0 0 0.75rem; color: #6b7280; font-size: 0.9rem; }
-        .post-text { margin: 0; color: #374151; line-height: 1.75; }
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 1rem 1.1rem;
+            font-size: 1rem;
+            color: #0f172a;
+            background: white;
+        }
+        .input-group textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 1rem 1.2rem;
+            border-radius: 16px;
+            display: none;
+        }
+        .message.success { background: #ecfdf5; color: #166534; border: 1px solid #a7f3d0; }
+        .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .post-list {
+            display: grid;
+            gap: 1rem;
+        }
+        .post-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(15,23,42,0.07);
+        }
+        .post-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.15rem;
+            color: #0f172a;
+        }
+        .post-meta {
+            margin: 0 0 1rem;
+            color: #64748b;
+            font-size: 0.92rem;
+        }
+        .empty-state {
+            padding: 2rem;
+            border-radius: 20px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            color: #475569;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <div class="forum-card">
-        <div class="forum-header">
+    <div class="layout">
+        <div class="topbar">
             <div>
-                <h2>Forum</h2>
-                <p>Nur angemeldete Benutzer dürfen dieses Forum sehen.</p>
-                <p id="userInfo" style="margin-top:0.5rem;color:#4b5563;font-size:0.95rem;">Lade...</p>
+                <h1>Forum</h1>
+                <p class="meta">Schreibe Nachrichten, diskutiere mit anderen und verwalte dein Profil.</p>
+                <p class="meta" id="userInfo">Lade...</p>
             </div>
             <div class="button-group">
-                <a href="settings.html" class="button-secondary">Profil</a>
-                <button id="logoutButton">Abmelden</button>
+                <a href="settings.html" class="button-link secondary">Profil</a>
+                <button id="logoutButton" class="button secondary">Abmelden</button>
             </div>
         </div>
 
-        <div class="forum-body">
-            <div class="notice">Willkommen! Du siehst dieses Forum, weil du eingeloggt bist. Teile hier Ideen, Fragen oder Feedback.</div>
+        <div class="card">
+            <div class="panel">
+                <aside class="sidebar">
+                    <h2>Bereiche</h2>
+                    <div class="nav-list">
+                        <button class="tab-button active" data-tab="posts">Beiträge</button>
+                        <button class="tab-button" data-tab="my-posts">Meine Beiträge</button>
+                        <button class="tab-button" data-tab="new-post">Neuer Beitrag</button>
+                    </div>
+                </aside>
 
-            <div class="post">
-                <h3 class="post-title">Begrüßung</h3>
-                <p class="post-meta">von Admin | heute</p>
-                <p class="post-text">Dieses Forum ist nur für angemeldete Mitglieder sichtbar. Du kannst dich abmelden oder oben auf Profil klicken, um deine Daten zu ändern.</p>
-            </div>
-            <div class="post">
-                <h3 class="post-title">Technik und Events</h3>
-                <p class="post-meta">von Moderator | gestern</p>
-                <p class="post-text">Hier sprechen wir über Licht, Ton und Technik bei Schulveranstaltungen. Wenn du Teil des Teams bist, melde dich an und bleibe auf dem Laufenden.</p>
-            </div>
-            <div class="post">
-                <h3 class="post-title">Website und Projekte</h3>
-                <p class="post-meta">von Community | vor 2 Tagen</p>
-                <p class="post-text">Das Forum ist auch ein Ort, um neue Webprojekte, Ideen und Fragen zu teilen. Wenn du mehr willst, klicke auf Profil und bearbeite deine Kontoinfos.</p>
+                <main class="panel-main">
+                    <section id="posts" class="section active">
+                        <div class="notice">Nur angemeldete Benutzer sehen dieses Forum. Schreibe jetzt deinen ersten Beitrag.</div>
+                        <div id="postList" class="post-list"></div>
+                    </section>
+
+                    <section id="my-posts" class="section">
+                        <div class="notice">Hier findest du alle Beiträge, die du selbst erstellt hast.</div>
+                        <div id="myPostList" class="post-list"></div>
+                    </section>
+
+                    <section id="new-post" class="section">
+                        <div class="notice">Erstelle einen Beitrag für das Forum. Dein Name wird automatisch angezeigt.</div>
+                        <form id="postForm" class="post-form">
+                            <div class="input-group">
+                                <label for="postTitle">Titel</label>
+                                <input type="text" id="postTitle" placeholder="Worum geht es?" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="postContent">Nachricht</label>
+                                <textarea id="postContent" placeholder="Teile hier deine Gedanken..." required></textarea>
+                            </div>
+                            <button type="submit" class="button">Beitrag erstellen</button>
+                            <div id="postMessage" class="message"></div>
+                        </form>
+                    </section>
+                </main>
             </div>
         </div>
     </div>
@@ -97,7 +263,141 @@
     <script>
         const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        const STORAGE_KEY = 'forum_posts_local';
+        const tableName = 'forum_posts';
         let client = null;
+        let currentUser = null;
+        let allPosts = [];
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' });
+        }
+
+        function showMessage(text, type = 'success') {
+            const message = document.getElementById('postMessage');
+            message.textContent = text;
+            message.className = 'message ' + type;
+            message.style.display = 'block';
+        }
+
+        function clearMessage() {
+            const message = document.getElementById('postMessage');
+            message.textContent = '';
+            message.style.display = 'none';
+        }
+
+        function renderPosts(posts, elementId) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!posts.length) {
+                container.innerHTML = '<div class="empty-state">Keine Beiträge gefunden. Erstelle einen neuen Beitrag über den Bereich „Neuer Beitrag“.</div>';
+                return;
+            }
+
+            for (const post of posts) {
+                const card = document.createElement('article');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <h3>${post.title}</h3>
+                    <p class="post-meta">${post.author_name || post.author_email || 'Unbekannt'} · ${formatDate(post.created_at || post.createdAt)}</p>
+                    <p>${post.content.replace(/\n/g, '<br>')}</p>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function saveLocalPosts(posts) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+        }
+
+        function loadLocalPosts() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved ? JSON.parse(saved) : [];
+            } catch {
+                return [];
+            }
+        }
+
+        async function loadPosts() {
+            const localPosts = loadLocalPosts();
+            let fetchedPosts = [];
+            let usingSupabase = false;
+
+            try {
+                const { data, error } = await client.from(tableName).select('id,title,content,created_at,author_name,author_email').order('created_at', { ascending: false }).limit(50);
+                if (!error && data) {
+                    fetchedPosts = data.map(post => ({
+                        id: post.id,
+                        title: post.title,
+                        content: post.content,
+                        created_at: post.created_at,
+                        author_name: post.author_name,
+                        author_email: post.author_email,
+                    }));
+                    usingSupabase = true;
+                }
+            } catch (err) {
+                console.warn('Supabase fetch failed', err);
+            }
+
+            allPosts = usingSupabase ? fetchedPosts : localPosts;
+            const myPosts = allPosts.filter(post => post.author_email === currentUser.email);
+            renderPosts(allPosts, 'postList');
+            renderPosts(myPosts, 'myPostList');
+        }
+
+        async function postNewEntry(event) {
+            event.preventDefault();
+            clearMessage();
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            if (!title || !content) {
+                showMessage('Bitte Titel und Nachricht eingeben.', 'error');
+                return;
+            }
+
+            const newPost = {
+                title,
+                content,
+                author_name: currentUser.user_metadata?.full_name || currentUser.email,
+                author_email: currentUser.email,
+                createdAt: new Date().toISOString(),
+            };
+
+            try {
+                const { data, error } = await client.from(tableName).insert([{ title, content, author_name: newPost.author_name, author_email: newPost.author_email }]);
+                if (!error && data) {
+                    newPost.created_at = data[0].created_at || newPost.createdAt;
+                    allPosts.unshift(newPost);
+                    saveLocalPosts(allPosts);
+                    renderPosts(allPosts, 'postList');
+                    renderPosts(allPosts.filter(post => post.author_email === currentUser.email), 'myPostList');
+                    document.getElementById('postForm').reset();
+                    showMessage('Beitrag veröffentlicht!', 'success');
+                    return;
+                }
+                throw error || new Error('Unbekannter Fehler');
+            } catch (err) {
+                const localPosts = loadLocalPosts();
+                localPosts.unshift(newPost);
+                saveLocalPosts(localPosts);
+                allPosts = localPosts;
+                renderPosts(allPosts, 'postList');
+                renderPosts(allPosts.filter(post => post.author_email === currentUser.email), 'myPostList');
+                document.getElementById('postForm').reset();
+                showMessage('Beitrag lokal gespeichert. Supabase-Datenbank möglich nicht verfügbar.', 'success');
+            }
+        }
+
+        function switchTab(event) {
+            const selected = event.currentTarget.dataset.tab;
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === selected));
+            document.querySelectorAll('.section').forEach(section => section.classList.toggle('active', section.id === selected));
+        }
 
         async function init() {
             if (typeof supabase === 'undefined') {
@@ -110,12 +410,15 @@
                 window.location.href = 'login.html';
                 return;
             }
-            const user = data.user;
-            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (user.email || 'Unbekannt');
+            currentUser = data.user;
+            document.getElementById('userInfo').textContent = 'Angemeldet als: ' + (currentUser.email || 'Unbekannt');
             document.getElementById('logoutButton').addEventListener('click', async () => {
                 await client.auth.signOut();
                 window.location.href = 'login.html';
             });
+            document.getElementById('postForm').addEventListener('submit', postNewEntry);
+            document.querySelectorAll('.tab-button').forEach(button => button.addEventListener('click', switchTab));
+            await loadPosts();
         }
 
         window.addEventListener('DOMContentLoaded', init);
