@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account-Einstellungen | Dein Projekt</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .settings-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 520px;
+        }
+
+        h2 { color: #2d3748; margin-bottom: 0.5rem; font-weight: 700; }
+        p { color: #718096; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: #4a5568; font-weight: 600; }
+        input { width: 100%; padding: 12px 16px; border: 2px solid #edf2f7; border-radius: 10px; box-sizing: border-box; font-size: 1rem; transition: all 0.3s ease; }
+        input:focus { border-color: #667eea; outline: none; box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+            margin-top: 1rem;
+        }
+        button:hover { background: #5a67d8; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+
+        .two-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        #message { margin-top: 1.5rem; font-size: 0.9rem; padding: 12px; border-radius: 8px; display: none; }
+        .error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; display: block !important; }
+        .success { background: #f0fff4; color: #2f855a; border: 1px solid #9ae6b4; display: block !important; }
+
+        .meta { margin-top: 1rem; color: #4a5568; font-size: 0.9rem; }
+        .meta strong { color: #2d3748; }
+        .link-button { width: 100%; text-align: center; text-decoration: none; display: inline-block; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="settings-card">
+        <h2>Account-Einstellungen</h2>
+        <p>Hier kannst du deine Kontodaten sehen, anmelden oder dich abmelden.</p>
+
+        <div class="meta">Eingeloggt als: <strong id="userEmail">...</strong></div>
+        <div class="meta">Benutzer-ID: <strong id="userId">...</strong></div>
+
+        <form id="profileForm">
+            <div class="input-group">
+                <label for="fullName">Name / Anzeige</label>
+                <input type="text" id="fullName" placeholder="Dein Name" autocomplete="name">
+            </div>
+            <div class="input-group">
+                <label for="newEmail">Neue E-Mail</label>
+                <input type="email" id="newEmail" placeholder="neue@mail.de" autocomplete="email">
+            </div>
+            <button type="submit">Profil aktualisieren</button>
+        </form>
+
+        <div class="two-buttons">
+            <button id="resetPasswordButton" type="button">Passwort zurücksetzen</button>
+            <button id="logoutButton" type="button">Abmelden</button>
+        </div>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        let client = null;
+
+        function showMessage(text, type = 'error') {
+            const msgDiv = document.getElementById('message');
+            msgDiv.style.display = 'block';
+            msgDiv.className = type;
+            msgDiv.innerText = text;
+        }
+
+        async function loadProfile() {
+            const { data, error } = await client.auth.getUser();
+            if (error || !data) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('userEmail').innerText = data.email || 'Unbekannt';
+            document.getElementById('userId').innerText = data.id;
+            document.getElementById('fullName').value = data.user_metadata?.full_name || '';
+        }
+
+        async function updateProfile(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('fullName').value.trim();
+            const newEmail = document.getElementById('newEmail').value.trim();
+
+            if (!client) {
+                showMessage('Supabase konnte nicht geladen werden. Bitte Seite neu laden.');
+                return;
+            }
+
+            try {
+                const updatePayload = { data: { full_name: fullName } };
+                if (newEmail) {
+                    updatePayload.email = newEmail;
+                }
+
+                const { data, error } = await client.auth.updateUser(updatePayload);
+                if (error) {
+                    showMessage('Fehler: ' + error.message);
+                    return;
+                }
+
+                showMessage('Profil aktualisiert!', 'success');
+                if (data?.email) {
+                    document.getElementById('userEmail').innerText = data.email;
+                }
+                document.getElementById('newEmail').value = '';
+            } catch (err) {
+                showMessage('Kritischer Fehler: ' + err.message);
+            }
+        }
+
+        async function resetPassword() {
+            const { data, error } = await client.auth.resetPasswordForEmail(document.getElementById('userEmail').innerText, {
+                redirectTo: window.location.origin + '/login.html'
+            });
+            if (error) {
+                showMessage('Fehler: ' + error.message);
+            } else {
+                showMessage('Passwort-Zurücksetzungsmail gesendet.', 'success');
+            }
+        }
+
+        async function logout() {
+            await client.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (typeof supabase === 'undefined') {
+                document.body.innerHTML = '<div style="padding: 2rem; font-family: sans-serif;">Supabase konnte nicht geladen werden. Bitte Seite neu laden.</div>';
+                return;
+            }
+
+            client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            await loadProfile();
+
+            document.getElementById('profileForm').addEventListener('submit', updateProfile);
+            document.getElementById('resetPasswordButton').addEventListener('click', resetPassword);
+            document.getElementById('logoutButton').addEventListener('click', logout);
+        });
+    </script>
+</body>
+</html>
