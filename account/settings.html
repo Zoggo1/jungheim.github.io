@@ -169,7 +169,7 @@
             const user = data.user;
             document.getElementById('userEmail').textContent = user.email || 'Unbekannt';
             document.getElementById('userId').textContent = user.id;
-            document.getElementById('fullName').value = user.user_metadata?.full_name || '';
+            document.getElementById('fullName').value = user.user_metadata?.full_name || user.user_metadata?.username || '';
         }
 
         async function updateProfile(event) {
@@ -177,7 +177,11 @@
             const fullName = document.getElementById('fullName').value.trim();
             const newEmail = document.getElementById('newEmail').value.trim();
 
-            const updateData = { data: { full_name: fullName } };
+            const updateData = { data: {} };
+            if (fullName) {
+                updateData.data.full_name = fullName;
+                updateData.data.username = fullName;
+            }
             if (newEmail) {
                 updateData.email = newEmail;
             }
@@ -186,6 +190,17 @@
             if (error) {
                 showMessage('Fehler: ' + error.message, 'error');
                 return;
+            }
+
+            if (fullName) {
+                const profileUpdate = await client.from('profiles').upsert({
+                    id: data.user.id,
+                    username: fullName,
+                    full_name: fullName,
+                });
+                if (profileUpdate.error) {
+                    console.error('Profile update error:', profileUpdate.error);
+                }
             }
 
             showMessage('Profil aktualisiert!', 'success');
