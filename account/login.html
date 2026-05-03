@@ -8,10 +8,183 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <link rel="stylesheet" href="Style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden;
+            position: relative;
+            background-color: #0f172a;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.25);
+            z-index: 1;
+        }
+
+        .login-box {
+            position: relative;
+            width: 380px;
+            padding: 50px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        h2 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 45px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 35px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: rgba(0, 0, 0, 0.3);
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 5px 12px 30px;
+            font-size: 15px;
+            color: #ffffff;
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 12px;
+            left: 30px;
+            color: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
+
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -18px;
+            left: 0;
+            font-size: 12px;
+            color: #38bdf8;
+            font-weight: 500;
+        }
+
+        .input-group input:focus ~ i,
+        .input-group input:valid ~ i {
+            color: #38bdf8;
+        }
+
+        .input-group input:focus,
+        .input-group input:valid {
+            border-bottom: 1.5px solid #38bdf8;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background: #0284c7;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 30px;
+            color: #ffffff;
+            font-size: 13px;
+        }
+
+        .signup-link a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .signup-link a:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+        }
+
+        #message {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            display: block !important;
+        }
+
+        .success {
+            background: #ecfdf5;
+            color: #166534;
+            border: 1px solid #a7f3d0;
+            display: block !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -21,9 +194,9 @@
             <h2>Login</h2>
             
             <div class="input-group">
-                <i class="fas fa-user"></i>
-                <input type="text" id="identifier" placeholder="Benutzername oder E-Mail" required>
-                <label>Benutzername oder E-Mail</label>
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="identifier" placeholder="deine@email.de" required>
+                <label>E-Mail</label>
             </div>
 
             <div class="input-group">
@@ -45,7 +218,90 @@
         </form>
     </div>
     
-    <script src="script.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
+        let client = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log('DOMContentLoaded - Supabase:', typeof supabase !== 'undefined' ? 'geladen' : 'NICHT geladen');
+            
+            if (typeof supabase !== 'undefined') {
+                try {
+                    client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    console.log('Supabase Client initialisiert');
+                } catch (err) {
+                    console.error('Fehler beim Initialisieren von Supabase:', err);
+                }
+            } else {
+                console.error('Supabase ist nicht geladen!');
+            }
+
+            const loginForm = document.getElementById("login-form");
+            
+            if (!loginForm) {
+                console.error('Login-Formular nicht gefunden!');
+                return;
+            }
+
+            loginForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                console.log('Login-Submit ausgelöst');
+                handleLogin();
+            });
+            
+            console.log('Event-Listener hinzugefügt');
+        });
+
+        async function handleLogin() {
+            const msgDiv = document.getElementById('message');
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value;
+
+            msgDiv.style.display = 'block';
+            msgDiv.className = '';
+            msgDiv.innerText = 'Prüfe Zugangsdaten...';
+
+            if (!identifier || !password) {
+                msgDiv.innerText = 'Bitte gib E-Mail und Passwort ein.';
+                msgDiv.className = 'error';
+                return;
+            }
+
+            if (!client) {
+                msgDiv.innerText = 'Fehler: Supabase konnte nicht geladen werden. Bitte Seite neu laden.';
+                msgDiv.className = 'error';
+                return;
+            }
+
+            try {
+                const { data, error } = await client.auth.signInWithPassword({
+                    email: identifier,
+                    password,
+                });
+
+                if (error) {
+                    msgDiv.innerText = 'Error: ' + error.message;
+                    msgDiv.className = 'error';
+                    return;
+                }
+
+                if (data.user) {
+                    msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung zum Forum...';
+                    msgDiv.className = 'success';
+                    setTimeout(() => {
+                        window.location.href = 'forum.html';
+                    }, 1500);
+                } else {
+                    msgDiv.innerText = 'Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten.';
+                    msgDiv.className = 'error';
+                }
+            } catch (err) {
+                msgDiv.innerText = 'Kritischer Fehler: ' + err.message;
+                msgDiv.className = 'error';
+            }
+        }
+    </script>
 </body>
 
 </html>
