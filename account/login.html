@@ -1,66 +1,51 @@
-const SUPABASE_URL = 'https://hlcapqbkwfxlvrdedhsn.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_hhaNeuG7r1pV7U-A4djxuQ_p55N_-hJ';
-let client = null;
+<!DOCTYPE html>
+<html lang="de">
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof supabase !== 'undefined') {
-        client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Heimatfest</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    const loginForm = document.getElementById("login-form");
-    const submitBtn = document.getElementById("submitBtn");
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
 
-    loginForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        handleLogin();
-    });
-});
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-async function handleLogin() {
-    const msgDiv = document.getElementById('message');
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+    <link rel="stylesheet" href="Style.css">
+</head>
 
-    msgDiv.style.display = 'block';
-    msgDiv.className = '';
-    msgDiv.innerText = 'Prüfe Zugangsdaten...';
+<body>
+    
+    <div class="login-box">
+        <form id="login-form">
+            <h2>Login</h2>
+            
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="identifier" placeholder="Benutzername oder E-Mail" required>
+                <label>Benutzername oder E-Mail</label>
+            </div>
 
-    if (!email || !password) {
-        msgDiv.innerText = 'Bitte gib E-Mail und Passwort ein.';
-        msgDiv.className = 'error';
-        return;
-    }
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" required>
+                <label>Passwort</label>
+            </div>
+            
+            <button type="submit" id="submitBtn" class="login-btn">Sign In</button>
 
-    if (!client) {
-        msgDiv.innerText = 'Fehler: Supabase konnte nicht geladen werden. Bitte Seite neu laden.';
-        msgDiv.className = 'error';
-        return;
-    }
+            <div id="message"></div>
 
-    try {
-        const { data, error } = await client.auth.signInWithPassword({
-            email,
-            password,
-        });
+            <p class="signup-link">
+                <a href="password-reset.html">Passwort vergessen?</a>
+            </p>
+            <p class="signup-link">
+                New here? <a href="register.html">Create Account</a>
+            </p>   
+        </form>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
 
-        if (error) {
-            msgDiv.innerText = 'Error: ' + error.message;
-            msgDiv.className = 'error';
-            return;
-        }
-
-        if (data.user) {
-            msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung...';
-            msgDiv.className = 'success';
-            setTimeout(() => {
-                window.location.href = 'settings.html';
-            }, 1500);
-        } else {
-            msgDiv.innerText = 'Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten.';
-            msgDiv.className = 'error';
-        }
-    } catch (err) {
-        msgDiv.innerText = 'Kritischer Fehler: ' + err.message;
-        msgDiv.className = 'error';
-    }
-}
+</html>
