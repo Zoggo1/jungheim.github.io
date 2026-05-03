@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const loginForm = document.getElementById("login-form");
-    const submitBtn = document.getElementById("submitBtn");
 
     loginForm.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -16,17 +15,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+async function resolveEmail(identifier) {
+    if (identifier.includes('@')) {
+        return identifier;
+    }
+
+    if (!client) {
+        return null;
+    }
+
+    const { data, error } = await client
+        .from('profiles')
+        .select('email')
+        .eq('username', identifier)
+        .maybeSingle();
+
+    if (error || !data?.email) {
+        return null;
+    }
+
+    return data.email;
+}
+
 async function handleLogin() {
     const msgDiv = document.getElementById('message');
-    const email = document.getElementById('email').value.trim();
+    const identifier = document.getElementById('identifier').value.trim();
     const password = document.getElementById('password').value;
 
     msgDiv.style.display = 'block';
     msgDiv.className = '';
     msgDiv.innerText = 'Prüfe Zugangsdaten...';
 
-    if (!email || !password) {
-        msgDiv.innerText = 'Bitte gib E-Mail und Passwort ein.';
+    if (!identifier || !password) {
+        msgDiv.innerText = 'Bitte gib Benutzername/E-Mail und Passwort ein.';
         msgDiv.className = 'error';
         return;
     }
@@ -35,6 +56,18 @@ async function handleLogin() {
         msgDiv.innerText = 'Fehler: Supabase konnte nicht geladen werden. Bitte Seite neu laden.';
         msgDiv.className = 'error';
         return;
+    }
+
+    let email = identifier;
+    if (!identifier.includes('@')) {
+        msgDiv.innerText = 'Suche Benutzername...';
+        const resolvedEmail = await resolveEmail(identifier);
+        if (!resolvedEmail) {
+            msgDiv.innerText = 'Benutzername nicht gefunden. Bitte nutze E-Mail oder registriere dich zuerst.';
+            msgDiv.className = 'error';
+            return;
+        }
+        email = resolvedEmail;
     }
 
     try {
@@ -50,10 +83,10 @@ async function handleLogin() {
         }
 
         if (data.user) {
-            msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung...';
+            msgDiv.innerText = 'Erfolgreich eingeloggt! Weiterleitung zum Forum...';
             msgDiv.className = 'success';
             setTimeout(() => {
-                window.location.href = 'settings.html';
+                window.location.href = 'forum.html';
             }, 1500);
         } else {
             msgDiv.innerText = 'Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten.';
