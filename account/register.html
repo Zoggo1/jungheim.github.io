@@ -191,24 +191,24 @@
             <h2>Registrieren</h2>
             
             <div class="input-group">
-                <label>Benutzername *</label>
+                <label>Benutzername</label>
                 <div style="position: relative;">
                     <i class="fas fa-user" style="position: absolute; left: 0; top: 12px; color: rgba(0, 0, 0, 0.3); font-size: 16px;"></i>
-                    <input type="text" id="username" placeholder="dein Benutzername" required style="padding-left: 30px;">
+                    <input type="text" id="username" placeholder="Benutzername" required style="padding-left: 30px;">
                 </div>
             </div>
             <div class="input-group">
                 <label>E-Mail</label>
                 <div style="position: relative;">
                     <i class="fas fa-envelope" style="position: absolute; left: 0; top: 12px; color: rgba(0, 0, 0, 0.3); font-size: 16px;"></i>
-                    <input type="email" id="email" placeholder="email@beispiel.de" required style="padding-left: 30px;">
+                    <input type="email" id="email" placeholder="E-Mail" required style="padding-left: 30px;">
                 </div>
             </div>
             <div class="input-group">
-                <label>Passwort (min. 6 Zeichen)</label>
+                <label>Passwort (min. 8 Zeichen)</label>
                 <div style="position: relative;">
                     <i class="fas fa-lock" style="position: absolute; left: 0; top: 12px; color: rgba(0, 0, 0, 0.3); font-size: 16px;"></i>
-                    <input type="password" id="password" placeholder="••••••••" required style="padding-left: 30px;">
+                    <input type="password" id="password" placeholder="" required style="padding-left: 30px;">
                 </div>
             </div>
             
@@ -263,8 +263,8 @@
             return;
         }
 
-        if (password.length < 6) {
-            msgDiv.innerText = 'Das Passwort muss mindestens 6 Zeichen haben.';
+        if (password.length < 8) {
+            msgDiv.innerText = 'Das Passwort muss mindestens 8 Zeichen haben.';
             msgDiv.className = 'error';
             return;
         }
