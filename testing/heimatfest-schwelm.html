@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schwelmer Heimatfest 2026</title>
+    <title>Heimatfest Schwelm 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -29,32 +30,32 @@
         const attractionData = {
             'love-express': {
                 name: 'Love Express',
-                image: '/testing/Bilder/Loveexpress.jpg',
+                image: 'Loveexpress.jpg',
                 location: 'Kreuzung Molktestraße/Wilhelmstraße',
                 operator: 'Mischa Kreft',
-                dimensions: '18 × 18 m',
-                yearBuilt: '1979',
-                description: '...'
+                dimensions: '15m Durchmesser',
+                yearBuilt: '2010',
+                description: 'Eine klassische Kettenkarussell-Bahn für Paare und Einzelne. Ein romantisches Abenteuer in der Luft mit unvergesslichen Aussichten.'
             },
             'break-dance': {
                 name: 'Break Dance No2',
-                image: '/testing/Bilder/Breakdance.jpg',
+                image: 'breakdance.jpg',
                 location: 'Neumarkt',
                 operator: 'Bonner Witten',
                 instagram: 'breakdance_bonner',
-                dimensions: '25,5 × 25 m',
-                yearBuilt: '1993',
-                description: '...'
+                dimensions: '18m Höhe',
+                yearBuilt: '2015',
+                description: 'Ein dynamisches Breakdance-Fahrgeschäft mit schnellen Drehungen und akrobatischen Bewegungen. Nicht für schwache Nerven!'
             },
             'autoscooter': {
                 name: 'Autoscooter',
-                image: '/testing/Bilder/autoscooter.jpg',
+                image: 'autoscooter.jpg',
                 location: 'Neumarkt',
                 operator: 'Frank G. Schmidt',
                 instagram: 'autoscooterdrivein',
-                dimensions: '34 × 18 m',
-                yearBuilt: '1992',
-                description: '...'
+                dimensions: '20m x 30m Arena',
+                yearBuilt: '2008',
+                description: 'Das klassische Autoscooter-Fahrgeschäft. Rammen, fahren und Spaß haben im bunten Gedränge der Arena.'
             }
         };
         
@@ -149,15 +150,13 @@
         </div>
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
             <div class="flex flex-col gap-3 bg-white/90 dark:bg-[#1c1c1e]/90 rounded-3xl p-4 border border-gray-200 dark:border-white/10 glass">
-                <a href="#Programm" 
-					<i class="fa-solid fa-location-dot"></i>
-					class="hover:text-red-600 transition">Programm</a>
+                <a href="#Programm" class="hover:text-red-600 transition">Programm</a>
                 <a href="#zeiten" class="hover:text-red-600 transition">Öffnungszeiten</a>
                 <a href="#attraktionen" class="hover:text-red-600 transition">Attraktionen</a>
                 <a href="#anfahrt" class="hover:text-red-600 transition">Anfahrt</a>
                 <button onclick="toggleDarkMode()" class="py-3 px-4 rounded-full bg-gray-100 dark:bg-[#2c2c2e] text-sm font-medium">☀️ Theme</button>
                 <a href="https://www.instagram.com/schwelmerheimatfest/" target="_blank" class="bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-4 rounded-full apple-hover shadow-lg inline-flex items-center justify-center">
-                    <span class="sr-only">Instagram</span>
+                    <span class="sr-only"><i class="fa-brands fa-instagram"></i>    Instagram</span>
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7.25a4.75 4.75 0 1 1 0 9.5a4.75 4.75 0 0 1 0-9.5zm0 1.5a3.25 3.25 0 1 0 0 6.5a3.25 3.25 0 0 0 0-6.5zm4.75-.75a1.25 1.25 0 1 1 0 2.5a1.25 1.25 0 0 1 0-2.5z"/></svg>
                 </a>
             </div>
@@ -165,12 +164,12 @@
     </nav>
 
     <section class="relative h-screen flex items-center justify-center text-center bg-black">
-        <img src="/testing/Bilder/riesenrad.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50">
+        <img src="riesenrad.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50">
         <div class="hero-gradient absolute inset-0"></div>
 
         <div class="absolute top-24 right-6 md:right-12 z-20">
             <div class="weather-card glass overflow-hidden rounded-3xl shadow-2xl" style="width: 150px;">
-		<a class="weatherwidget-io" href="https://forecast7.com/de/51d297d29/schwelm/" data-label_1="SCHWELM" data-label_2="Wetter" data-icons="Climacons Animated" data-mode="Current" data-days="3" data-theme="weather_one" >SCHWELM Wetter</a>
+		<a class="weatherwidget-io" href="https://forecast7.com/de/51d297d29/schwelm/" data-label_1="Wetter" data-label_2="Schwelm" data-icons="Climacons Animated" data-mode="Current" data-days="3" data-theme="weather_one" >SCHWELM Wetter</a>
 		<script>
 		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 		</script>
@@ -245,7 +244,7 @@
             <h2 class="text-4xl font-bold mb-12">Attraktions Highlights + Kirmesplan 2025</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="attraction-card relative h-80 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group cursor-pointer" onclick="openModal('love-express')">
-                    <img src="/testing/Bilder/Loveexpress.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <img src="Loveexpress.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end text-white">
                         <h4 class="font-bold text-lg">Love Express</h4>
                         <p class="text-sm opacity-80 italic">Standort: Kreuzung Molktestraße/Wilhelmstraße</p>
@@ -253,7 +252,7 @@
                     </div>
                 </div>
                 <div class="attraction-card relative h-80 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group cursor-pointer" onclick="openModal('break-dance')">
-                    <img src="/testing/Bilder/Breakdance.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <img src="breakdance.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end text-white">
                         <a href="https://www.instagram.com/breakdance_bonner/" target="_blank" onclick="event.stopPropagation();" class="absolute top-4 right-4 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-4 rounded-full apple-hover shadow-lg inline-flex items-center justify-center z-10">
                             <span class="sr-only">Instagram</span>
@@ -265,7 +264,7 @@
                     </div>
                 </div>
                 <div class="attraction-card relative h-80 rounded-[2.5rem] overflow-hidden apple-hover shadow-md group cursor-pointer" onclick="openModal('autoscooter')">
-                    <img src="/testing/Bilder/autoscooter.JPG" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <img src="autoscooter.jpg" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
                     <div class="absolute inset-0 bg-black/40 p-8 flex flex-col justify-end text-white">
                         <a href="https://www.instagram.com/autoscooterdrivein/" target="_blank" onclick="event.stopPropagation();" class="absolute top-4 right-4 bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white p-4 rounded-full apple-hover shadow-lg inline-flex items-center justify-center z-10">
                             <span class="sr-only">Instagram</span>
@@ -290,14 +289,14 @@
             <div class="lg:w-1/2">
                 <h2 class="text-4xl font-bold mb-8">Anreise</h2>
                 <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-[2.5rem] apple-hover shadow-sm mb-6 border border-gray-100 dark:border-white/5">
-                    <h4 class="text-xl font-bold mb-4">🚆 Bahn & Bus</h4>
+                    <h4 class="text-xl font-bold mb-4"><i class="fa-solid fa-bus-simple"></i>  Bus & Bahn</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-300">
-                        Bahn: <b>S8 / RE7 / RE13</b><br>
-                        Bus: 608, 557, 556 <br>
+                        Bus: <b>S8 / RE7 / RE13</b><br>
+                        Bahn: 608, 557, 556 <br>
                     </p>
                 </div>
                 <div class="bg-white dark:bg-[#1c1c1e] p-8 rounded-[2.5rem] apple-hover shadow-sm border border-gray-100 dark:border-white/5">
-                    <h4 class="text-xl font-bold mb-4">🅿️ Parken</h4>
+                    <h4 class="text-xl font-bold mb-4"><i class="fa-solid fa-square-parking"></i>  Parken</h4>
                     <p class="text-sm text-gray-500 dark:text-gray-300 italic">P1 Roller (Talstraße) </p>
 		    <p class="text-sm text-gray-500 dark:text-gray-300 italic">P2 Kreishaus </p>
 		    <p class="text-sm text-gray-500 dark:text-gray-300 italic">P3 Parkhaus am Mühlenteich (€) </p>
@@ -339,7 +338,7 @@
                     
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-gray-100 dark:bg-[#2c2c2e] p-4 rounded-lg">
-                            <p class="text-xs uppercase tracking-widest text-red-600 font-bold">📐 Maße</p>
+                            <p class="text-xs uppercase tracking-widest text-red-600 font-bold">📐 Größe</p>
                             <p id="modalDimensions" class="text-sm font-semibold mt-1"></p>
                         </div>
                         
